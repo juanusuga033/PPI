@@ -13,7 +13,7 @@ function App() {
               <Link to="/">Inicio</Link>
             </li>
             <li>
-              {session ? <Link to="/profile">Mi Perfil</Link> : <Link to="/login">Iniciar sesión</Link>}
+             <Link to="/login">Iniciar sesión</Link>
             </li>
             <li>
               <Link to="/register">Registro</Link>

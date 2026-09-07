@@ -1,0 +1,97 @@
+/* Header Component */
+.app-header {
+  background: #2a2a2a;
+  border-bottom: 1px solid #444;
+  padding: 15px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 15px;
+  flex: 1;
+}
+
+.nav-btn {
+  padding: 8px 20px;
+  border-radius: 25px;
+  border: 2px solid white;
+  background: transparent;
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-btn.active {
+  background: white;
+  color: #2a2a2a;
+}
+
+.user-section {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.perfil-link, .nav-link {
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.perfil-link:hover, .nav-link:hover {
+  color: #ccc;
+}
+
+.logout-btn {
+  padding: 8px 15px;
+  background: #ff6b6b;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: #ff5252;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-buttons {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .nav-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .user-section {
+    gap: 10px;
+  }
+}

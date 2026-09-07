@@ -1,40 +1,32 @@
 import './App.css'
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Header from './components/Header'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import Home from './pages/Home'
+import Compra from './pages/Compra'
+import Venta from './pages/Venta'
+import Donaciones from './pages/Donaciones'
+import Perfil from './pages/Perfil'
+import Producto from './pages/Producto'
+import Contacto from './pages/Contacto'
 
 function App() {
   return (
     <BrowserRouter>
-      <header className="app-header">
-        <nav>
-          <ul className="nav-list">
-            <li>
-              <Link to="/">Inicio</Link>
-            </li>
-            <li>
-             <Link to="/login">Iniciar sesión</Link>
-            </li>
-            <li>
-              <Link to="/register">Registro</Link>
-            </li>
-          </ul>
-        </nav>
-      </header>
-
-      <main>
+      <Header />
+      <main className="app-main">
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route
-            path="/"
-            element={
-              <div className="home">
-                <h1>Bienvenido</h1>
-                <p>Usa el menú para iniciar sesión o registrarte.</p>
-              </div>
-            }
-          />
+          <Route path="/compra" element={<Compra />} />
+          <Route path="/venta" element={<Venta />} />
+          <Route path="/donaciones" element={<Donaciones />} />
+          <Route path="/perfil" element={<Perfil />} />
+          <Route path="/producto/:id" element={<Producto />} />
+          <Route path="/donacion/:id" element={<Producto />} />
+          <Route path="/contacto" element={<Contacto />} />
         </Routes>
       </main>
     </BrowserRouter>

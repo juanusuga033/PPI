@@ -22,7 +22,7 @@ function Protected({ children }) {
 
 function App() {
   return (
-    <BrowserRouter><AuthProvider>
+    <BrowserRouter basename={import.meta.env.BASE_URL}><AuthProvider>
       <Header />
       <main className="app-main">
         <Routes>

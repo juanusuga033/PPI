@@ -1,105 +1,72 @@
 import { useCallback, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
-import { Link, useNavigate } from 'react-router-dom'
+import { removePublicationImage } from '../lib/publicationService'
+import { useAuth } from '../lib/AuthContext'
 import '../styles/Perfil.css'
 
 export default function Perfil() {
-  const [user, setUser] = useState(null)
+  const { user, profile } = useAuth()
   const [publicaciones, setPublicaciones] = useState([])
+  const [form, setForm] = useState({ nombre: '', apellido: '', avatar_url: '' })
   const [loading, setLoading] = useState(true)
-  const navigate = useNavigate()
+  const [saving, setSaving] = useState(false)
+  const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
 
-  const fetchPublicaciones = useCallback(async (userId) => {
-    try {
-      const { data, error } = await supabase
-        .from('publicaciones')
-        .select('*')
-        .eq('usuario_id', userId)
-      if (error) throw error
-      setPublicaciones(data || [])
-    } catch (err) {
-      console.error('Error fetching publicaciones:', err)
-    } finally {
-      setLoading(false)
-    }
-  }, [])
+  const fetchPublicaciones = useCallback(async () => {
+    const { data, error: queryError } = await supabase.from('publicaciones').select('*').eq('usuario_id', user.id).order('created_at', { ascending: false })
+    if (queryError) setError(queryError.message)
+    else setPublicaciones(data || [])
+    setLoading(false)
+  }, [user])
 
-  const checkUser = useCallback(async () => {
-    const { data } = await supabase.auth.getSession()
-    if (!data.session) {
-      navigate('/login')
-      return
-    }
-    setUser(data.session.user)
-    fetchPublicaciones(data.session.user.id)
-  }, [fetchPublicaciones, navigate])
-
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
-    // Resolve the current session before rendering private profile data.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    checkUser()
-  }, [checkUser])
+    if (!user) return
+    setForm({ nombre: profile?.nombre || user.user_metadata?.first_name || '', apellido: profile?.apellido || user.user_metadata?.last_name || '', avatar_url: profile?.avatar_url || '' })
+    fetchPublicaciones()
+  }, [user, profile, fetchPublicaciones])
+  /* eslint-enable react-hooks/set-state-in-effect */
 
-  async function handleDelete(id, imagenUrl) {
-    if (!confirm('¿Estás seguro de que deseas eliminar esta publicación?')) return
-    try {
-      // Eliminar imagen si existe
-      if (imagenUrl) {
-        const fileName = imagenUrl.split('/').pop()
-        await supabase.storage
-          .from('uniformes')
-          .remove([`publicaciones/${fileName}`])
-      }
-
-      const { error } = await supabase
-        .from('publicaciones')
-        .delete()
-        .eq('id', id)
-      if (error) throw error
-      setPublicaciones((current) => current.filter((p) => p.id !== id))
-      alert('Publicación eliminada')
-    } catch (err) {
-      alert('Error al eliminar: ' + err.message)
-    }
+  async function saveProfile(event) {
+    event.preventDefault(); setSaving(true); setError(''); setMessage('')
+    const { error: updateError } = await supabase.from('profiles').upsert({ id: user.id, nombre: form.nombre.trim(), apellido: form.apellido.trim(), email: user.email, avatar_url: form.avatar_url.trim() || null }, { onConflict: 'id' })
+    setSaving(false)
+    if (updateError) return setError(updateError.message)
+    setMessage('Perfil actualizado correctamente.')
   }
 
-  if (!user) return <p className="loading">Cargando...</p>
+  async function changeStatus(publication, estado) {
+    setError('')
+    const { data, error: updateError } = await supabase.from('publicaciones').update({ estado }).eq('id', publication.id).eq('usuario_id', user.id).select().single()
+    if (updateError) return setError(updateError.message)
+    setPublicaciones(current => current.map(item => item.id === publication.id ? data : item))
+  }
 
-  return (
-    <div className="perfil-page">
-      <div className="perfil-header">
-        <h1>Mi Perfil</h1>
-        <p className="email">{user.email}</p>
-      </div>
+  async function handleDelete(publication) {
+    if (!confirm('¿Estás seguro de que deseas eliminar esta publicación?')) return
+    setError('')
+    try {
+      const { error: deleteError } = await supabase.from('publicaciones').delete().eq('id', publication.id).eq('usuario_id', user.id)
+      if (deleteError) throw deleteError
+      await removePublicationImage(publication.imagen_url)
+      setPublicaciones(current => current.filter(item => item.id !== publication.id))
+    } catch (deleteError) { setError(deleteError.message) }
+  }
 
-      <div className="perfil-content">
-        <h2>Mis Publicaciones</h2>
-        {loading ? (
-          <p>Cargando...</p>
-        ) : publicaciones.length === 0 ? (
-          <p className="empty">No tienes publicaciones aún</p>
-        ) : (
-          <div className="publicaciones-list">
-            {publicaciones.map((pub) => (
-              <div key={pub.id} className="publicacion-item">
-                <div className="item-image">
-                  {pub.imagen_url && <img src={pub.imagen_url} alt={pub.titulo} />}
-                </div>
-                <div className="item-info">
-                  <h3>{pub.titulo}</h3>
-                  <p>Precio: ${pub.precio}</p>
-                  <p>Talla: {pub.talla}</p>
-                  <p>Tipo: {pub.tipo === 'donacion' ? 'Donación' : 'Venta'}</p>
-                  <div className="item-actions">
-                    <Link className="edit-btn" to={`/producto/${pub.id}`}>Ver publicación</Link>
-                    <button className="delete-btn" onClick={() => handleDelete(pub.id, pub.imagen_url)}>Eliminar</button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+  if (!user || loading) return <p className="loading">Cargando...</p>
+  const active = publicaciones.filter(item => item.estado === 'activo').length
+  const donations = publicaciones.filter(item => item.tipo === 'donacion').length
+
+  return <div className="perfil-page">
+    <div className="perfil-header"><h1>Mi Perfil</h1><p className="email">{user.email}</p><p>{publicaciones.length} publicaciones · {active} activas · {donations} donaciones</p></div>
+    <div className="perfil-content">
+      <h2>Mis datos</h2>
+      <form onSubmit={saveProfile} className="perfil-form"><label>Nombre<input value={form.nombre} onChange={event => setForm({ ...form, nombre: event.target.value })} required /></label><label>Apellido<input value={form.apellido} onChange={event => setForm({ ...form, apellido: event.target.value })} required /></label><label>Avatar / foto<input type="url" value={form.avatar_url} onChange={event => setForm({ ...form, avatar_url: event.target.value })} placeholder="URL de imagen" /></label><button className="button primary" disabled={saving}>{saving ? 'Guardando...' : 'Guardar datos'}</button></form>
+      {message && <div className="form-success">{message}</div>}{error && <div className="form-error">{error}</div>}
+      <h2>Mis Publicaciones</h2>
+      {publicaciones.length === 0 ? <p className="empty">No tienes publicaciones aún</p> : <div className="publicaciones-list">{publicaciones.map(pub => <div key={pub.id} className="publicacion-item"><div className="item-image">{pub.imagen_url && <img src={pub.imagen_url} alt={pub.titulo} />}</div><div className="item-info"><h3>{pub.titulo}</h3><p>Precio: ${pub.precio}</p><p>Talla: {pub.talla}</p><p>Tipo: {pub.tipo === 'donacion' ? 'Donación' : 'Venta'}</p><p>Estado: {pub.estado}</p><div className="item-actions"><Link className="edit-btn" to={`/producto/${pub.id}`}>Editar</Link><button className="edit-btn" onClick={() => changeStatus(pub, pub.estado === 'activo' ? 'pausado' : 'activo')}>{pub.estado === 'activo' ? 'Pausar' : 'Activar'}</button><button className="delete-btn" onClick={() => handleDelete(pub)}>Eliminar</button></div></div></div>)}</div>}
     </div>
-  )
+  </div>
 }

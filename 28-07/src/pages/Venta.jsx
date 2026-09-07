@@ -1,10 +1,12 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
+import { uploadPublicationImage, removePublicationImage } from '../lib/publicationService'
+import { useAuth } from '../lib/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import '../styles/Venta.css'
 
 export default function Venta() {
-  const [user, setUser] = useState(null)
+  const { user, loading: authLoading } = useAuth()
   const [titulo, setTitulo] = useState('')
   const [precio, setPrecio] = useState('')
   const [talla, setTalla] = useState('')
@@ -19,20 +21,9 @@ export default function Venta() {
   const [error, setError] = useState('')
   const navigate = useNavigate()
 
-  const checkUser = useCallback(async () => {
-    const { data } = await supabase.auth.getSession()
-    if (!data.session) {
-      navigate('/login')
-      return
-    }
-    setUser(data.session.user)
-  }, [navigate])
-
   useEffect(() => {
-    // Resolve the current session before allowing a publication.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    checkUser()
-  }, [checkUser])
+    if (!authLoading && !user) navigate('/login')
+  }, [authLoading, user, navigate])
 
   function handleImageChange(e) {
     const file = e.target.files?.[0]
@@ -56,38 +47,18 @@ export default function Venta() {
     setPreviewUrl(URL.createObjectURL(file))
   }
 
-  async function handleImageUpload(file) {
-    if (!file) return null
-    try {
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}`
-      const { error } = await supabase.storage
-        .from('uniformes')
-        .upload(`publicaciones/${fileName}`, file)
-      if (error) throw error
-      const { data } = supabase.storage
-        .from('uniformes')
-        .getPublicUrl(`publicaciones/${fileName}`)
-      return data.publicUrl
-    } catch (err) {
-      console.error('Error uploading image:', err)
-      throw err
-    }
-  }
-
   async function handleSubmit(e) {
     e.preventDefault()
     setLoading(true)
     setError('')
 
     try {
-      if (!titulo.trim() || (!isDonacion && !precio) || !talla.trim()) {
+      if (!user) throw new Error('Debes iniciar sesión para publicar.')
+      if (!titulo.trim() || (!isDonacion && (!precio || !Number.isFinite(Number(precio)))) || !talla.trim()) {
         throw new Error('Por favor completa todos los campos')
       }
 
-      let imagenUrl = null
-      if (imagen) {
-        imagenUrl = await handleImageUpload(imagen)
-      }
+      const uploaded = await uploadPublicationImage(imagen, user.id)
 
       const { error: insertError } = await supabase
         .from('publicaciones')
@@ -100,7 +71,7 @@ export default function Venta() {
             condicion,
             descripcion: descripcion.trim(),
             contacto: contacto.trim(),
-            imagen_url: imagenUrl,
+            imagen_url: uploaded.url,
             tipo: isDonacion ? 'donacion' : 'venta',
             usuario_id: user.id,
             estado: 'activo',
@@ -108,7 +79,10 @@ export default function Venta() {
           }
         ])
 
-      if (insertError) throw insertError
+      if (insertError) {
+        if (uploaded.url) await removePublicationImage(uploaded.url)
+        throw insertError
+      }
 
       alert('Publicación creada exitosamente')
       setTitulo('')
@@ -127,7 +101,7 @@ export default function Venta() {
     }
   }
 
-  if (!user) return <p className="loading">Cargando...</p>
+  if (authLoading || !user) return <p className="loading">Cargando...</p>
 
   return (
     <div className="venta-page">

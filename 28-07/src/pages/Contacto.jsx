@@ -30,7 +30,9 @@ export default function Contacto() {
         </div>
         
         <div className="contacto-logo">
-          <div className="shield">I.E. LA CANDELARIA</div>
+          <div className="shield">
+            <img src="/catalog/uniforme-15-page-4.jpeg" alt="Escudo de la I.E. La Candelaria" />
+          </div>
         </div>
       </div>
     </div>

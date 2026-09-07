@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import '../styles/Perfil.css'
 
 export default function Perfil() {
@@ -9,21 +9,7 @@ export default function Perfil() {
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
 
-  useEffect(() => {
-    checkUser()
-  }, [])
-
-  async function checkUser() {
-    const { data } = await supabase.auth.getSession()
-    if (!data.session) {
-      navigate('/login')
-      return
-    }
-    setUser(data.session.user)
-    fetchPublicaciones(data.session.user.id)
-  }
-
-  async function fetchPublicaciones(userId) {
+  const fetchPublicaciones = useCallback(async (userId) => {
     try {
       const { data, error } = await supabase
         .from('publicaciones')
@@ -36,7 +22,23 @@ export default function Perfil() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  const checkUser = useCallback(async () => {
+    const { data } = await supabase.auth.getSession()
+    if (!data.session) {
+      navigate('/login')
+      return
+    }
+    setUser(data.session.user)
+    fetchPublicaciones(data.session.user.id)
+  }, [fetchPublicaciones, navigate])
+
+  useEffect(() => {
+    // Resolve the current session before rendering private profile data.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    checkUser()
+  }, [checkUser])
 
   async function handleDelete(id, imagenUrl) {
     if (!confirm('¿Estás seguro de que deseas eliminar esta publicación?')) return
@@ -54,7 +56,7 @@ export default function Perfil() {
         .delete()
         .eq('id', id)
       if (error) throw error
-      setPublicaciones(publicaciones.filter(p => p.id !== id))
+      setPublicaciones((current) => current.filter((p) => p.id !== id))
       alert('Publicación eliminada')
     } catch (err) {
       alert('Error al eliminar: ' + err.message)
@@ -89,7 +91,7 @@ export default function Perfil() {
                   <p>Talla: {pub.talla}</p>
                   <p>Tipo: {pub.tipo === 'donacion' ? 'Donación' : 'Venta'}</p>
                   <div className="item-actions">
-                    <button className="edit-btn">Editar</button>
+                    <Link className="edit-btn" to={`/producto/${pub.id}`}>Ver publicación</Link>
                     <button className="delete-btn" onClick={() => handleDelete(pub.id, pub.imagen_url)}>Eliminar</button>
                   </div>
                 </div>

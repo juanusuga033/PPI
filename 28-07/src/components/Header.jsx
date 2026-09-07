@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 import '../styles/Header.css'
@@ -8,7 +8,14 @@ export default function Header() {
   const navigate = useNavigate()
   const location = useLocation()
 
+  const checkUser = useCallback(async () => {
+    const { data } = await supabase.auth.getSession()
+    setUser(data.session?.user || null)
+  }, [])
+
   useEffect(() => {
+    // The initial auth read synchronizes component state with Supabase.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     checkUser()
     const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user || null)
@@ -16,12 +23,7 @@ export default function Header() {
     return () => {
       listener?.subscription?.unsubscribe()
     }
-  }, [])
-
-  async function checkUser() {
-    const { data } = await supabase.auth.getSession()
-    setUser(data.session?.user || null)
-  }
+  }, [checkUser])
 
   async function handleLogout() {
     await supabase.auth.signOut()
@@ -41,6 +43,7 @@ export default function Header() {
           <Link to={user ? '/venta' : '/login'} className={`nav-btn ${isActive('/venta') ? 'active' : ''}`}>Venta</Link>
         </div>
         <div className="user-section">
+          <Link to="/contacto" className="nav-link">Contacto</Link>
           {user ? (
             <>
               <Link to="/perfil" className="perfil-link">Perfil</Link>

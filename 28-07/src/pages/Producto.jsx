@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
+import { getCatalogImage } from '../lib/catalogImages'
 import '../styles/Producto.css'
 
 export default function Producto() {
@@ -9,11 +10,7 @@ export default function Producto() {
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
 
-  useEffect(() => {
-    fetchProducto()
-  }, [id])
-
-  async function fetchProducto() {
+  const fetchProducto = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('publicaciones')
@@ -28,7 +25,23 @@ export default function Producto() {
     } finally {
       setLoading(false)
     }
+  }, [id, navigate])
+
+  function handleContact() {
+    if (!producto?.contacto) {
+      alert('Esta publicación no tiene información de contacto.')
+      return
+    }
+
+    const contact = producto.contacto.trim()
+    window.location.href = contact.includes('@') ? `mailto:${contact}` : `tel:${contact}`
   }
+
+  useEffect(() => {
+    // Load the selected publication from Supabase.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchProducto()
+  }, [fetchProducto])
 
   if (loading) return <p className="loading">Cargando...</p>
   if (!producto) return <p className="error">Producto no encontrado</p>
@@ -39,7 +52,7 @@ export default function Producto() {
       
       <div className="producto-detail">
         <div className="detail-image">
-          {producto.imagen_url && <img src={producto.imagen_url} alt={producto.titulo} />}
+          <img src={producto.imagen_url || getCatalogImage(0)} alt={producto.titulo} />
         </div>
         
         <div className="detail-info">
@@ -48,7 +61,7 @@ export default function Producto() {
           <p className="talla">Talla: {producto.talla}</p>
           <p className="descripcion">{producto.descripcion}</p>
           <p className="contacto">Contacto: {producto.contacto}</p>
-          <button className="contactar-btn">Contactar</button>
+          <button className="contactar-btn" onClick={handleContact}>Contactar</button>
         </div>
       </div>
     </div>

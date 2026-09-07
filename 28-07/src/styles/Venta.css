@@ -1,0 +1,107 @@
+.venta-page {
+  min-height: calc(100vh - 76px);
+  padding: 3rem clamp(1rem, 5vw, 4rem);
+  background: #232323;
+}
+
+.venta-container {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.8fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.venta-form {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.25rem, 4vw, 2.25rem);
+  border-radius: 1.25rem;
+  background: transparent;
+  border: 1px solid #fff;
+  box-shadow: 0 16px 35px rgba(64, 44, 36, 0.1);
+}
+
+.form-group input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.9rem 1rem;
+  border: 1px solid #fff;
+  border-radius: 0.7rem;
+  color: #232323;
+  font: inherit;
+}
+
+.form-group input:focus {
+  outline: 3px solid rgba(239, 118, 108, 0.2);
+  border-color: #ef766c;
+}
+
+.form-group input[type='file'] {
+  padding: 0.65rem;
+}
+
+.donacion-btn,
+.publicar-btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.85rem 1.25rem;
+  background: #292424;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+}
+
+.publicar-btn:hover {
+  background: #ef766c;
+}
+
+.publicar-btn:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.error-message {
+  padding: 0.8rem 1rem;
+  border-radius: 0.65rem;
+  background: #fff0ef;
+  color: #aa3b32;
+}
+
+.preview-box {
+  display: grid;
+  place-items: center;
+  min-height: 360px;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  background: #fff;
+}
+
+.preview-box img {
+  width: 100%;
+  height: 360px;
+  object-fit: cover;
+}
+
+.preview-placeholder {
+  color: #a99185;
+}
+
+.plus-icon {
+  font-size: 5rem;
+  font-weight: 200;
+}
+
+@media (max-width: 720px) {
+  .venta-container {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-box,
+  .preview-box img {
+    min-height: 240px;
+    height: 240px;
+  }
+}

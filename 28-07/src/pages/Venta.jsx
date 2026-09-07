@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import { useNavigate } from 'react-router-dom'
 import '../styles/Venta.css'
@@ -17,25 +17,41 @@ export default function Venta() {
   const [error, setError] = useState('')
   const navigate = useNavigate()
 
-  useEffect(() => {
-    checkUser()
-  }, [])
-
-  async function checkUser() {
+  const checkUser = useCallback(async () => {
     const { data } = await supabase.auth.getSession()
     if (!data.session) {
       navigate('/login')
       return
     }
     setUser(data.session.user)
-  }
+  }, [navigate])
+
+  useEffect(() => {
+    // Resolve the current session before allowing a publication.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    checkUser()
+  }, [checkUser])
 
   function handleImageChange(e) {
     const file = e.target.files?.[0]
-    if (file) {
-      setImagen(file)
-      setPreviewUrl(URL.createObjectURL(file))
+    if (!file) return
+
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp']
+    if (!validTypes.includes(file.type)) {
+      setError('La imagen debe ser JPG, PNG o WebP.')
+      e.target.value = ''
+      return
     }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setError('La imagen no puede superar los 5 MB.')
+      e.target.value = ''
+      return
+    }
+
+    setError('')
+    setImagen(file)
+    setPreviewUrl(URL.createObjectURL(file))
   }
 
   async function handleImageUpload(file) {
@@ -121,9 +137,9 @@ export default function Venta() {
               onChange={(e) => setPrecio(e.target.value)}
               required
             />
-            {isDonacion && (
-              <button type="button" className="donacion-btn" onClick={() => setIsDonacion(false)}>Donación</button>
-            )}
+            <button type="button" className="donacion-btn" onClick={() => setIsDonacion(!isDonacion)}>
+              {isDonacion ? 'Publicar como venta' : 'Publicar como donación'}
+            </button>
           </div>
           
           <div className="form-group">

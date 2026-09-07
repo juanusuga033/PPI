@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import { Link } from 'react-router-dom'
+import { getCatalogImage } from '../lib/catalogImages'
 import '../styles/Donaciones.css'
 
 export default function Donaciones() {
@@ -8,11 +9,7 @@ export default function Donaciones() {
   const [loading, setLoading] = useState(true)
   const [filtro, setFiltro] = useState('')
 
-  useEffect(() => {
-    fetchDonaciones()
-  }, [filtro])
-
-  async function fetchDonaciones() {
+  const fetchDonaciones = useCallback(async () => {
     try {
       let query = supabase
         .from('publicaciones')
@@ -31,7 +28,13 @@ export default function Donaciones() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [filtro])
+
+  useEffect(() => {
+    // Load remote donations when the filter changes.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchDonaciones()
+  }, [fetchDonaciones])
 
   return (
     <div className="donaciones-page">
@@ -51,12 +54,12 @@ export default function Donaciones() {
         ) : donaciones.length === 0 ? (
           <p className="empty">No hay donaciones disponibles</p>
         ) : (
-          donaciones.map((donacion) => (
+          donaciones.map((donacion, index) => (
             <Link key={donacion.id} to={`/donacion/${donacion.id}`} className="donacion-card">
               <div className="donacion-imagen">
-                {donacion.imagen_url && <img src={donacion.imagen_url} alt={donacion.titulo} />}
+                <img src={donacion.imagen_url || getCatalogImage(index)} alt={donacion.titulo} />
               </div>
-              <div className="donacion-info">Donación</div>
+              <div className="donacion-info">{donacion.titulo || 'Donación'}</div>
             </Link>
           ))
         )}

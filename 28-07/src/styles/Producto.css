@@ -1,0 +1,86 @@
+.producto-detail-page {
+  min-height: calc(100vh - 76px);
+  padding: 2.5rem clamp(1rem, 5vw, 4rem);
+  background: #232323;
+}
+
+.back-btn {
+  border: 0;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+
+.producto-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+  max-width: 1000px;
+  margin: 2rem auto 0;
+}
+
+.detail-image {
+  min-height: 420px;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  background: #fff;
+}
+
+.detail-image img {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+}
+
+.detail-info {
+  padding: 1rem 0;
+  color: #fff;
+}
+
+.detail-info h1 {
+  margin: 0 0 1rem;
+  color: #fff;
+}
+
+.precio {
+  color: #fff;
+  font-size: 1.4rem;
+  font-weight: 900;
+}
+
+.talla,
+.descripcion,
+.contacto {
+  margin-top: 1rem;
+}
+
+.contactar-btn {
+  margin-top: 1.5rem;
+  padding: 0.9rem 1.4rem;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #232323;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+}
+
+.contactar-btn:hover {
+  background: #d0d0d0;
+}
+
+@media (max-width: 720px) {
+  .producto-detail {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-image,
+  .detail-image img {
+    min-height: 280px;
+    height: 280px;
+  }
+}

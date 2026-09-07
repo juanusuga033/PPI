@@ -1,15 +1,19 @@
 /* Header Component */
 .app-header {
-  background: #2a2a2a;
-  border-bottom: 1px solid #444;
-  padding: 15px 20px;
+  margin: 1.25rem auto 0;
+  width: calc(100% - 2.5rem);
+  box-sizing: border-box;
+  background: #232323;
+  border: 1px solid #fff;
+  border-radius: 2.4rem;
+  padding: 12px 16px;
   position: sticky;
   top: 0;
   z-index: 100;
 }
 
 .nav-container {
-  max-width: 1400px;
+  max-width: 1126px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -19,14 +23,14 @@
 
 .nav-buttons {
   display: flex;
-  gap: 15px;
+  gap: 12px;
   flex: 1;
 }
 
 .nav-btn {
   padding: 8px 20px;
   border-radius: 25px;
-  border: 2px solid white;
+  border: 1px solid white;
   background: transparent;
   color: white;
   text-decoration: none;
@@ -43,7 +47,7 @@
 
 .nav-btn.active {
   background: white;
-  color: #2a2a2a;
+  color: #232323;
 }
 
 .user-section {
@@ -81,6 +85,11 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .app-header {
+    width: calc(100% - 1rem);
+    margin-top: 0.5rem;
+  }
+
   .nav-buttons {
     flex-wrap: wrap;
     gap: 10px;

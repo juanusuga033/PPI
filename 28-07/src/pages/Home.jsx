@@ -1,17 +1,14 @@
-import { useState, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import { Link } from 'react-router-dom'
+import { getCatalogImage } from '../lib/catalogImages'
 import '../styles/Home.css'
 
 export default function Home() {
   const [donations, setDonations] = useState([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    fetchDonations()
-  }, [])
-
-  async function fetchDonations() {
+  const fetchDonations = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('publicaciones')
@@ -25,7 +22,13 @@ export default function Home() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    // Load the public donation preview from Supabase.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchDonations()
+  }, [fetchDonations])
 
   return (
     <div className="home-page">
@@ -38,11 +41,15 @@ export default function Home() {
           </div>
         </div>
         <div className="hero-images">
-          {donations.map((donation, idx) => (
-            <div key={donation.id} className="heart-image" style={{order: idx}}>
-              {donation.imagen_url && <img src={donation.imagen_url} alt="donación" />}
-            </div>
-          ))}
+          {loading ? (
+            <p className="loading">Cargando donaciones...</p>
+          ) : (
+            donations.map((donation, idx) => (
+              <div key={donation.id} className="heart-image" style={{ order: idx }}>
+                <img src={donation.imagen_url || getCatalogImage(idx)} alt={donation.titulo || 'donación'} />
+              </div>
+            ))
+          )}
         </div>
       </section>
     </div>

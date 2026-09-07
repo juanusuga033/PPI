@@ -1,3 +1,13 @@
+.app-main {
+  min-height: calc(100vh - 76px);
+  background: #232323;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
 .counter {
   font-size: 16px;
   padding: 5px 10px;
@@ -240,6 +250,17 @@
 
 .auth-form button:hover {
   background: #1f2937;
+}
+
+.auth-secondary-btn {
+  display: block;
+  margin: 1rem auto 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #111827;
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .auth-form p {

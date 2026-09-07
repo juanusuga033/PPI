@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import { Link } from 'react-router-dom'
+import { getCatalogImage } from '../lib/catalogImages'
 import '../styles/Compra.css'
 
 export default function Compra() {
@@ -8,11 +9,7 @@ export default function Compra() {
   const [loading, setLoading] = useState(true)
   const [filtro, setFiltro] = useState('')
 
-  useEffect(() => {
-    fetchProductos()
-  }, [filtro])
-
-  async function fetchProductos() {
+  const fetchProductos = useCallback(async () => {
     try {
       let query = supabase
         .from('publicaciones')
@@ -31,7 +28,13 @@ export default function Compra() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [filtro])
+
+  useEffect(() => {
+    // Load remote publications when the filter changes.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchProductos()
+  }, [fetchProductos])
 
   return (
     <div className="compra-page">
@@ -51,12 +54,15 @@ export default function Compra() {
         ) : productos.length === 0 ? (
           <p className="empty">No hay productos disponibles</p>
         ) : (
-          productos.map((producto) => (
+          productos.map((producto, index) => (
             <Link key={producto.id} to={`/producto/${producto.id}`} className="producto-card">
               <div className="producto-imagen">
-                {producto.imagen_url && <img src={producto.imagen_url} alt={producto.titulo} />}
+                <img src={producto.imagen_url || getCatalogImage(index)} alt={producto.titulo} />
               </div>
-              <div className="producto-precio">$$$</div>
+              <div className="producto-precio">
+                {producto.titulo || 'Uniforme disponible'}
+                <span>{producto.precio ? `$${producto.precio}` : '$$$'}</span>
+              </div>
             </Link>
           ))
         )}

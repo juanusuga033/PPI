@@ -5,10 +5,24 @@ import { supabase } from '../lib/supabaseClient'
 export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [isRecovering, setIsRecovering] = useState(false)
   const navigate = useNavigate()
 
   async function handleSubmit(e) {
     e.preventDefault()
+    if (isRecovering) {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/login`,
+      })
+      if (error) {
+        alert(error.message)
+        return
+      }
+      alert('Te enviamos un enlace para restablecer tu contraseña.')
+      setIsRecovering(false)
+      return
+    }
+
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -23,7 +37,7 @@ export default function Login() {
 
   return (
     <section className="auth-form">
-      <h2>Iniciar sesión</h2>
+      <h2>{isRecovering ? 'Recuperar contraseña' : 'Iniciar sesión'}</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Email</label>
@@ -34,7 +48,7 @@ export default function Login() {
             required
           />
         </div>
-        <div>
+        {!isRecovering && <div>
           <label>Contraseña</label>
           <input
             type="password"
@@ -42,9 +56,12 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-        </div>
-        <button type="submit">Entrar</button>
+        </div>}
+        <button type="submit">{isRecovering ? 'Enviar enlace' : 'Entrar'}</button>
       </form>
+      <button type="button" className="auth-secondary-btn" onClick={() => setIsRecovering(!isRecovering)}>
+        {isRecovering ? 'Volver a iniciar sesión' : '¿Olvidaste tu contraseña?'}
+      </button>
       <p>
         ¿No tienes cuenta? <Link to="/register">Regístrate</Link>
       </p>

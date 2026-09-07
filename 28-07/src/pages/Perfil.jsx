@@ -4,7 +4,6 @@ import { supabase } from '../lib/supabaseClient'
 import { removePublicationImage } from '../lib/publicationService'
 import { useAuth } from '../lib/AuthContext'
 import '../styles/Perfil.css'
-import { removePublicationImage } from '../lib/publicationStorage'
 
 export default function Perfil() {
   const { user, profile } = useAuth()

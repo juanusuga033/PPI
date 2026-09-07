@@ -3,7 +3,6 @@ import { supabase } from '../lib/supabaseClient'
 import { uploadPublicationImage, removePublicationImage } from '../lib/publicationService'
 import { useAuth } from '../lib/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { uploadPublicationImage } from '../lib/publicationStorage'
 import '../styles/Venta.css'
 
 export default function Venta() {

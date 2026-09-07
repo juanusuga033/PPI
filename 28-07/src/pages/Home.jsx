@@ -1,57 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
-import { supabase } from '../lib/supabaseClient'
 import { Link } from 'react-router-dom'
-import { getCatalogImage } from '../lib/catalogImages'
+import { supabase } from '../lib/supabaseClient'
+import ProductCard from '../components/ProductCard'
 import '../styles/Home.css'
-
-export default function Home() {
-  const [donations, setDonations] = useState([])
-  const [loading, setLoading] = useState(true)
-
-  const fetchDonations = useCallback(async () => {
-    try {
-      const { data, error } = await supabase
-        .from('publicaciones')
-        .select('*')
-        .eq('tipo', 'donacion')
-        .limit(4)
-      if (error) throw error
-      setDonations(data || [])
-    } catch (err) {
-      console.error('Error fetching donations:', err)
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    // Load the public donation preview from Supabase.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchDonations()
-  }, [fetchDonations])
-
-  return (
-    <div className="home-page">
-      <section className="donations-hero">
-        <div className="hero-content">
-          <h1>GRACIAS POR TU<br />DONACIÓN</h1>
-          <div className="upload-box">
-            <div className="upload-icon">+</div>
-            <Link to="/venta" className="upload-btn">¡Publica tu donación aquí!</Link>
-          </div>
-        </div>
-        <div className="hero-images">
-          {loading ? (
-            <p className="loading">Cargando donaciones...</p>
-          ) : (
-            donations.map((donation, idx) => (
-              <div key={donation.id} className="heart-image" style={{ order: idx }}>
-                <img src={donation.imagen_url || getCatalogImage(idx)} alt={donation.titulo || 'donación'} />
-              </div>
-            ))
-          )}
-        </div>
-      </section>
-    </div>
-  )
-}
+export default function Home() { const [items, setItems] = useState([]); const [loading, setLoading] = useState(true)
+ const load = useCallback(async () => { const { data, error } = await supabase.from('publicaciones').select('*').order('created_at', { ascending: false }).limit(8); if (!error) setItems(data || []); setLoading(false) }, [])
+ // eslint-disable-next-line react-hooks/set-state-in-effect
+ useEffect(() => { load() }, [load]); const donations = items.filter(x => x.tipo === 'donacion').slice(0, 2)
+ return <div className="home-page"><section className="hero-pro"><div className="hero-copy"><span className="eyebrow">♻ Comunidad educativa circular</span><h1>El uniforme que ya no usas puede <em>acompañar otra historia.</em></h1><p>Compra, vende o dona prendas escolares de calidad. Menos desperdicio, más oportunidades para toda la comunidad.</p><div className="hero-actions"><Link className="button primary" to="/compra">Explorar uniformes</Link><Link className="button secondary" to="/venta">Publicar una prenda</Link></div><div className="hero-trust"><b>+ comunidad</b><span>Prendas que se reutilizan con propósito</span></div></div><div className="hero-art"><div className="circle-text">REUTILIZA · COMPARTE · TRANSFORMA · </div><img src="/catalog/uniforme-03-page-1.jpeg" alt="Uniforme escolar reutilizable" /><div className="floating-card">✦ <strong>Segunda vida</strong><small>para cada uniforme</small></div></div></section><section className="section categories"><div className="section-heading"><span className="eyebrow">Encuentra lo que buscas</span><h2>Uniformes para cada etapa</h2></div><div className="category-list">{['Uniformes','Camisas','Pantalones','Sudaderas','Zapatos','Accesorios'].map((x, i) => <Link to={`/compra?categoria=${x}`} key={x}><span>{['◒','◇','⌁','♧','◈','✦'][i]}</span>{x}<b>→</b></Link>)}</div></section><section className="section"><div className="section-heading row"><div><span className="eyebrow">Recién publicados</span><h2>Encuentra tu próximo uniforme</h2></div><Link className="text-link" to="/compra">Ver todos →</Link></div>{loading ? <div className="page-state">Buscando publicaciones…</div> : items.length ? <div className="product-grid">{items.filter(x => x.tipo !== 'donacion').slice(0,4).map((x,i) => <ProductCard product={x} index={i} key={x.id}/>)}</div> : <div className="empty-state">Aún no hay publicaciones. Sé la primera persona en dar una prenda una segunda vida.</div>}</section><section className="donation-band"><div><span className="eyebrow">Dar también es vestir</span><h2>Prendas para regalar, historias para continuar.</h2><p>Descubre publicaciones que la comunidad comparte sin costo.</p><Link className="button light" to="/donaciones">Ver donaciones</Link></div>{donations.map((x,i) => <ProductCard product={x} index={i+4} key={x.id}/>)}</section><section className="final-cta"><span>¿Tienes una prenda en buen estado?</span><h2>Dale una nueva oportunidad.</h2><Link className="button primary" to="/venta">Publicar ahora</Link></section></div> }

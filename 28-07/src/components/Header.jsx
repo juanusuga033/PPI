@@ -1,62 +1,9 @@
-import { useCallback, useEffect, useState } from 'react'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
+import { useAuth } from '../lib/AuthContext'
 import '../styles/Header.css'
-
-export default function Header() {
-  const [user, setUser] = useState(null)
-  const navigate = useNavigate()
-  const location = useLocation()
-
-  const checkUser = useCallback(async () => {
-    const { data } = await supabase.auth.getSession()
-    setUser(data.session?.user || null)
-  }, [])
-
-  useEffect(() => {
-    // The initial auth read synchronizes component state with Supabase.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    checkUser()
-    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user || null)
-    })
-    return () => {
-      listener?.subscription?.unsubscribe()
-    }
-  }, [checkUser])
-
-  async function handleLogout() {
-    await supabase.auth.signOut()
-    setUser(null)
-    navigate('/')
-  }
-
-  const isActive = (path) => location.pathname === path
-
-  return (
-    <header className="app-header">
-      <nav className="nav-container">
-        <div className="nav-buttons">
-          <Link to="/donaciones" className={`nav-btn ${isActive('/donaciones') ? 'active' : ''}`}>Donaciones</Link>
-          <Link to="/" className={`nav-btn ${isActive('/') ? 'active' : ''}`}>Inicio</Link>
-          <Link to="/compra" className={`nav-btn ${isActive('/compra') ? 'active' : ''}`}>Compra</Link>
-          <Link to={user ? '/venta' : '/login'} className={`nav-btn ${isActive('/venta') ? 'active' : ''}`}>Venta</Link>
-        </div>
-        <div className="user-section">
-          <Link to="/contacto" className="nav-link">Contacto</Link>
-          {user ? (
-            <>
-              <Link to="/perfil" className="perfil-link">Perfil</Link>
-              <button onClick={handleLogout} className="logout-btn">Salir</button>
-            </>
-          ) : (
-            <>
-              <Link to="/login" className="nav-link">Iniciar sesión</Link>
-              <Link to="/register" className="nav-link">Registro</Link>
-            </>
-          )}
-        </div>
-      </nav>
-    </header>
-  )
-}
+export default function Header() { const { user } = useAuth(); const [open, setOpen] = useState(false); const navigate = useNavigate(); const name = user?.user_metadata?.first_name || user?.email?.split('@')[0] || 'Mi cuenta'
+ async function logout() { await supabase.auth.signOut(); navigate('/') }
+ const close = () => setOpen(false)
+ return <header className="app-header"><nav className="nav-container"><Link className="brand" to="/" onClick={close}>Donay<span>Viste</span><i>↻</i></Link><button className="menu-toggle" onClick={() => setOpen(!open)} aria-label="Abrir menú">{open ? '×' : '☰'}</button><div className={`nav-menu ${open ? 'open' : ''}`}><div className="nav-buttons"><NavLink end to="/" onClick={close}>Inicio</NavLink><NavLink to="/compra" onClick={close}>Comprar</NavLink><NavLink to="/venta" onClick={close}>Vender</NavLink><NavLink to="/donaciones" onClick={close}>Donaciones</NavLink><NavLink to="/contacto" onClick={close}>Contacto</NavLink></div><div className="user-section">{user ? <><Link to="/perfil" onClick={close} className="user-chip"><b>{name.slice(0, 1).toUpperCase()}</b><span>{name}</span></Link><button className="logout-btn" onClick={logout}>Salir</button></> : <><Link to="/login" onClick={close}>Iniciar sesión</Link><Link className="primary-nav" to="/register" onClick={close}>Crear cuenta</Link></>}</div></div></nav></header> }

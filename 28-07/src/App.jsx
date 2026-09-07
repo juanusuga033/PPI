@@ -1,6 +1,8 @@
 import './App.css'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import Header from './components/Header'
+import Footer from './components/Footer'
+import { AuthProvider, useAuth } from './lib/AuthContext'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Home from './pages/Home'
@@ -10,10 +12,17 @@ import Donaciones from './pages/Donaciones'
 import Perfil from './pages/Perfil'
 import Producto from './pages/Producto'
 import Contacto from './pages/Contacto'
+import PasswordReset from './pages/PasswordReset'
+
+function Protected({ children }) {
+  const { user, loading } = useAuth()
+  if (loading) return <div className="page-state">Cargando tu cuenta…</div>
+  return user ? children : <Navigate to="/login" replace />
+}
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter><AuthProvider>
       <Header />
       <main className="app-main">
         <Routes>
@@ -21,15 +30,18 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/compra" element={<Compra />} />
-          <Route path="/venta" element={<Venta />} />
+          <Route path="/venta" element={<Protected><Venta /></Protected>} />
           <Route path="/donaciones" element={<Donaciones />} />
-          <Route path="/perfil" element={<Perfil />} />
+          <Route path="/perfil" element={<Protected><Perfil /></Protected>} />
+          <Route path="/mis-publicaciones" element={<Protected><Perfil /></Protected>} />
           <Route path="/producto/:id" element={<Producto />} />
           <Route path="/donacion/:id" element={<Producto />} />
           <Route path="/contacto" element={<Contacto />} />
+          <Route path="/recuperar-password" element={<PasswordReset />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </main>
-    </BrowserRouter>
+      </main><Footer />
+    </AuthProvider></BrowserRouter>
   )
 }
 

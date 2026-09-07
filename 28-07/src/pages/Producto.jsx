@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 import { getCatalogImage } from '../lib/catalogImages'
+import { useAuth } from '../lib/AuthContext'
 import '../styles/Producto.css'
 
 export default function Producto() {
@@ -9,6 +10,7 @@ export default function Producto() {
   const [producto, setProducto] = useState(null)
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
+  const { user } = useAuth()
 
   const fetchProducto = useCallback(async () => {
     try {
@@ -45,6 +47,7 @@ export default function Producto() {
 
   if (loading) return <p className="loading">Cargando...</p>
   if (!producto) return <p className="error">Producto no encontrado</p>
+  const owner = user?.id === producto.usuario_id
 
   return (
     <div className="producto-detail-page">
@@ -57,11 +60,11 @@ export default function Producto() {
         
         <div className="detail-info">
           <h1>{producto.titulo}</h1>
-          <p className="precio">Precio: ${producto.precio}</p>
-          <p className="talla">Talla: {producto.talla}</p>
-          <p className="descripcion">{producto.descripcion}</p>
-          <p className="contacto">Contacto: {producto.contacto}</p>
-          <button className="contactar-btn" onClick={handleContact}>Contactar</button>
+          <p className="precio">{producto.tipo === 'donacion' ? 'DONACIÓN · Gratis' : `$${Number(producto.precio || 0).toLocaleString('es-CO')}`}</p>
+          <p className="talla"><b>Talla:</b> {producto.talla || 'Por confirmar'} · <b>Estado:</b> {producto.condicion || 'Buen estado'}</p>
+          <p className="descripcion">{producto.descripcion || 'El vendedor aún no agregó una descripción.'}</p>
+          <p className="contacto"><b>Publicado por la comunidad</b><br />{producto.created_at ? new Date(producto.created_at).toLocaleDateString('es-CO') : 'Fecha no disponible'}</p>
+          {owner ? <button className="contactar-btn" onClick={() => navigate('/perfil')}>Gestionar publicación</button> : <button className="contactar-btn" onClick={handleContact}>Contactar vendedor</button>}
         </div>
       </div>
     </div>

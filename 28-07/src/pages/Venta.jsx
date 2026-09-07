@@ -8,6 +8,8 @@ export default function Venta() {
   const [titulo, setTitulo] = useState('')
   const [precio, setPrecio] = useState('')
   const [talla, setTalla] = useState('')
+  const [categoria, setCategoria] = useState('Uniformes')
+  const [condicion, setCondicion] = useState('Buen estado')
   const [descripcion, setDescripcion] = useState('')
   const [contacto, setContacto] = useState('')
   const [imagen, setImagen] = useState(null)
@@ -78,7 +80,7 @@ export default function Venta() {
     setError('')
 
     try {
-      if (!titulo.trim() || !precio || !talla.trim()) {
+      if (!titulo.trim() || (!isDonacion && !precio) || !talla.trim()) {
         throw new Error('Por favor completa todos los campos')
       }
 
@@ -92,8 +94,10 @@ export default function Venta() {
         .insert([
           {
             titulo: titulo.trim(),
-            precio: parseFloat(precio),
+            precio: isDonacion ? 0 : parseFloat(precio),
             talla: talla.trim(),
+            categoria,
+            condicion,
             descripcion: descripcion.trim(),
             contacto: contacto.trim(),
             imagen_url: imagenUrl,
@@ -129,7 +133,10 @@ export default function Venta() {
     <div className="venta-page">
       <div className="venta-container">
         <form onSubmit={handleSubmit} className="venta-form">
-          <div className="form-group">
+          <button type="button" className="donacion-btn" onClick={() => setIsDonacion(!isDonacion)}>
+            {isDonacion ? 'Cambiar a venta' : 'Publicar como donación'}
+          </button>
+          {!isDonacion && <div className="form-group">
             <input
               type="number"
               placeholder="Pon tu precio: ______"
@@ -137,10 +144,7 @@ export default function Venta() {
               onChange={(e) => setPrecio(e.target.value)}
               required
             />
-            <button type="button" className="donacion-btn" onClick={() => setIsDonacion(!isDonacion)}>
-              {isDonacion ? 'Publicar como venta' : 'Publicar como donación'}
-            </button>
-          </div>
+          </div>}
           
           <div className="form-group">
             <input
@@ -151,6 +155,8 @@ export default function Venta() {
               required
             />
           </div>
+          <div className="form-group"><select value={categoria} onChange={(e) => setCategoria(e.target.value)}><option>Uniformes</option><option>Camisas</option><option>Pantalones</option><option>Sudaderas</option><option>Zapatos</option><option>Accesorios</option></select></div>
+          <div className="form-group"><select value={condicion} onChange={(e) => setCondicion(e.target.value)}><option>Como nuevo</option><option>Buen estado</option><option>Uso visible</option></select></div>
           
           <div className="form-group">
             <input

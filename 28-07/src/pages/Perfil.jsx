@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import { Link, useNavigate } from 'react-router-dom'
 import '../styles/Perfil.css'
+import { removePublicationImage } from '../lib/publicationStorage'
 
 export default function Perfil() {
   const [user, setUser] = useState(null)
@@ -43,19 +44,12 @@ export default function Perfil() {
   async function handleDelete(id, imagenUrl) {
     if (!confirm('¿Estás seguro de que deseas eliminar esta publicación?')) return
     try {
-      // Eliminar imagen si existe
-      if (imagenUrl) {
-        const fileName = imagenUrl.split('/').pop()
-        await supabase.storage
-          .from('uniformes')
-          .remove([`publicaciones/${fileName}`])
-      }
-
       const { error } = await supabase
         .from('publicaciones')
         .delete()
         .eq('id', id)
       if (error) throw error
+      await removePublicationImage(imagenUrl)
       setPublicaciones((current) => current.filter((p) => p.id !== id))
       alert('Publicación eliminada')
     } catch (err) {

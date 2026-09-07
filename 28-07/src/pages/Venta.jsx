@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import { useNavigate } from 'react-router-dom'
+import { uploadPublicationImage } from '../lib/publicationStorage'
 import '../styles/Venta.css'
 
 export default function Venta() {
@@ -56,24 +57,6 @@ export default function Venta() {
     setPreviewUrl(URL.createObjectURL(file))
   }
 
-  async function handleImageUpload(file) {
-    if (!file) return null
-    try {
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}`
-      const { error } = await supabase.storage
-        .from('uniformes')
-        .upload(`publicaciones/${fileName}`, file)
-      if (error) throw error
-      const { data } = supabase.storage
-        .from('uniformes')
-        .getPublicUrl(`publicaciones/${fileName}`)
-      return data.publicUrl
-    } catch (err) {
-      console.error('Error uploading image:', err)
-      throw err
-    }
-  }
-
   async function handleSubmit(e) {
     e.preventDefault()
     setLoading(true)
@@ -86,7 +69,7 @@ export default function Venta() {
 
       let imagenUrl = null
       if (imagen) {
-        imagenUrl = await handleImageUpload(imagen)
+        imagenUrl = (await uploadPublicationImage(user.id, imagen)).url
       }
 
       const { error: insertError } = await supabase

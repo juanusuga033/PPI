@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
-import { uploadPublicationImage, removePublicationImage } from '../lib/publicationService'
+import { uploadPublicationImage, removePublicationImage, validateImage } from '../lib/publicationService'
 import { useAuth } from '../lib/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import '../styles/Venta.css'
 
-export default function Venta() {
+export default function Venta({ donationOnly = false }) {
   const { user, loading: authLoading } = useAuth()
   const [titulo, setTitulo] = useState('')
   const [precio, setPrecio] = useState('')
@@ -14,39 +14,35 @@ export default function Venta() {
   const [condicion, setCondicion] = useState('Buen estado')
   const [descripcion, setDescripcion] = useState('')
   const [contacto, setContacto] = useState('')
-  const [imagen, setImagen] = useState(null)
-  const [previewUrl, setPreviewUrl] = useState(null)
-  const [isDonacion, setIsDonacion] = useState(false)
+  const [imagenes, setImagenes] = useState([])
+  const [previewUrls, setPreviewUrls] = useState([])
+  const [cantidad, setCantidad] = useState(1)
+  const [isDonacion, setIsDonacion] = useState(donationOnly)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
   const navigate = useNavigate()
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/login')
   }, [authLoading, user, navigate])
 
+  // Valida las fotografías seleccionadas y prepara sus vistas previas locales.
   function handleImageChange(e) {
-    const file = e.target.files?.[0]
-    if (!file) return
-
-    const validTypes = ['image/jpeg', 'image/png', 'image/webp']
-    if (!validTypes.includes(file.type)) {
-      setError('La imagen debe ser JPG, PNG o WebP.')
+    const files = Array.from(e.target.files || [])
+    try {
+      files.forEach(file => validateImage(file))
+      if (files.length > 5) throw new Error('Puedes agregar hasta 5 fotografías.')
+      setError('')
+      setImagenes(files)
+      setPreviewUrls(files.map(file => URL.createObjectURL(file)))
+    } catch (imageError) {
+      setError(imageError.message)
       e.target.value = ''
-      return
     }
-
-    if (file.size > 5 * 1024 * 1024) {
-      setError('La imagen no puede superar los 5 MB.')
-      e.target.value = ''
-      return
-    }
-
-    setError('')
-    setImagen(file)
-    setPreviewUrl(URL.createObjectURL(file))
   }
 
+  // Sube las imágenes y crea la publicación asociada al usuario autenticado.
   async function handleSubmit(e) {
     e.preventDefault()
     setLoading(true)
@@ -57,8 +53,12 @@ export default function Venta() {
       if (!titulo.trim() || (!isDonacion && (!precio || !Number.isFinite(Number(precio)))) || !talla.trim()) {
         throw new Error('Por favor completa todos los campos')
       }
+      if (isDonacion && !imagenes.length) throw new Error('Agrega al menos una fotografía de la prenda donada.')
+      if (isDonacion && !contacto.trim()) throw new Error('Agrega un medio de contacto para coordinar la entrega.')
+      if (!Number.isInteger(Number(cantidad)) || Number(cantidad) < 1) throw new Error('La cantidad debe ser mayor que cero.')
 
-      const uploaded = await uploadPublicationImage(imagen, user.id)
+      const uploads = await Promise.all(imagenes.map(file => uploadPublicationImage(file, user.id)))
+      const imageUrls = uploads.map(upload => upload.url)
 
       const { error: insertError } = await supabase
         .from('publicaciones')
@@ -71,7 +71,9 @@ export default function Venta() {
             condicion,
             descripcion: descripcion.trim(),
             contacto: contacto.trim(),
-            imagen_url: uploaded.url,
+            imagen_url: imageUrls[0] || null,
+            imagenes: imageUrls,
+            cantidad: Number(cantidad),
             tipo: isDonacion ? 'donacion' : 'venta',
             usuario_id: user.id,
             estado: 'activo',
@@ -80,19 +82,20 @@ export default function Venta() {
         ])
 
       if (insertError) {
-        if (uploaded.url) await removePublicationImage(uploaded.url)
+        await Promise.all(imageUrls.map(removePublicationImage))
         throw insertError
       }
 
-      alert('Publicación creada exitosamente')
+      setSuccess(isDonacion ? 'Donación publicada correctamente.' : 'Publicación creada correctamente.')
       setTitulo('')
       setPrecio('')
       setTalla('')
       setDescripcion('')
       setContacto('')
-      setImagen(null)
-      setPreviewUrl(null)
-      navigate(isDonacion ? '/donaciones' : '/compra')
+      setImagenes([])
+      setPreviewUrls([])
+      setCantidad(1)
+      setTimeout(() => navigate(isDonacion ? '/donaciones' : '/compra'), 700)
     } catch (err) {
       setError(err.message)
       console.error('Error:', err)
@@ -107,9 +110,9 @@ export default function Venta() {
     <div className="venta-page">
       <div className="venta-container">
         <form onSubmit={handleSubmit} className="venta-form">
-          <button type="button" className="donacion-btn" onClick={() => setIsDonacion(!isDonacion)}>
+          {!donationOnly && <button type="button" className="donacion-btn" onClick={() => setIsDonacion(!isDonacion)}>
             {isDonacion ? 'Cambiar a venta' : 'Publicar como donación'}
-          </button>
+          </button>}
           {!isDonacion && <div className="form-group">
             <input
               type="number"
@@ -120,6 +123,10 @@ export default function Venta() {
             />
           </div>}
           
+          <div className="form-group">
+            <label htmlFor="cantidad">Cantidad disponible</label>
+            <input id="cantidad" type="number" min="1" value={cantidad} onChange={(e) => setCantidad(e.target.value)} required />
+          </div>
           <div className="form-group">
             <input
               type="text"
@@ -164,11 +171,14 @@ export default function Venta() {
             <input
               type="file"
               accept="image/*"
+              multiple
+              accept="image/jpeg,image/png,image/webp"
               onChange={handleImageChange}
             />
           </div>
 
           {error && <div className="error-message">{error}</div>}
+          {success && <div className="form-success">{success}</div>}
 
           <button type="submit" className="publicar-btn" disabled={loading}>
             {loading ? 'Publicando...' : 'Publicar'}
@@ -177,8 +187,8 @@ export default function Venta() {
 
         <div className="venta-preview">
           <div className="preview-box">
-            {previewUrl ? (
-              <img src={previewUrl} alt="preview" />
+            {previewUrls.length ? (
+              <div className="preview-gallery">{previewUrls.map((url, index) => <img key={url} src={url} alt={`Vista previa ${index + 1}`} />)}</div>
             ) : (
               <div className="preview-placeholder">
                 <div className="plus-icon">+</div>

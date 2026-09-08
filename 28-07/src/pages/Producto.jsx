@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 import { getCatalogImage } from '../lib/catalogImages'
-import { removePublicationImage, uploadPublicationImage } from '../lib/publicationService'
+import { removePublicationImage, uploadPublicationImage, validateImage } from '../lib/publicationService'
 import { useAuth } from '../lib/AuthContext'
 import '../styles/Producto.css'
 
@@ -18,6 +18,7 @@ export default function Producto() {
   const navigate = useNavigate()
   const { user } = useAuth()
 
+  // Obtiene desde Supabase el detalle público de una publicación.
   const fetchProducto = useCallback(async () => {
     setLoading(true); setError('')
     const { data, error: queryError } = await supabase.from('publicaciones').select('*').eq('id', id).single()
@@ -29,25 +30,33 @@ export default function Producto() {
   useEffect(() => { fetchProducto() }, [fetchProducto])
   /* eslint-enable react-hooks/set-state-in-effect */
 
+  // Abre el medio de contacto que el propietario dejó disponible.
   function handleContact() {
     if (!producto?.contacto) return setError('Esta publicación no tiene información de contacto.')
     const contact = producto.contacto.trim()
     window.location.href = contact.includes('@') ? `mailto:${contact}` : `tel:${contact}`
   }
 
+  // Guarda los cambios propios y reemplaza la imagen anterior de forma segura.
   async function savePublication(event) {
     event.preventDefault(); setSaving(true); setError('')
     try {
       let imageUrl = producto.imagen_url
+      let imageUrls = producto.imagenes?.length ? producto.imagenes : [producto.imagen_url].filter(Boolean)
       let uploadedUrl = null
-      if (newImage) { const uploaded = await uploadPublicationImage(newImage, user.id); imageUrl = uploaded.url; uploadedUrl = uploaded.url }
-      const { data, error: updateError } = await supabase.from('publicaciones').update({ titulo: draft.titulo.trim(), descripcion: draft.descripcion.trim(), precio: Number(draft.precio) || 0, talla: draft.talla.trim(), categoria: draft.categoria, condicion: draft.condicion, contacto: draft.contacto.trim(), imagen_url: imageUrl }).eq('id', producto.id).eq('usuario_id', user.id).select().single()
+      if (newImage) {
+        validateImage(newImage)
+        const uploaded = await uploadPublicationImage(newImage, user.id)
+        imageUrl = uploaded.url; uploadedUrl = uploaded.url; imageUrls = [uploaded.url]
+      }
+      const { data, error: updateError } = await supabase.from('publicaciones').update({ titulo: draft.titulo.trim(), descripcion: draft.descripcion.trim(), precio: Number(draft.precio) || 0, talla: draft.talla.trim(), categoria: draft.categoria, condicion: draft.condicion, contacto: draft.contacto.trim(), imagen_url: imageUrl, imagenes: imageUrls }).eq('id', producto.id).eq('usuario_id', user.id).select().single()
       if (updateError) { if (uploadedUrl) await removePublicationImage(uploadedUrl); throw updateError }
-      if (newImage && producto.imagen_url) await removePublicationImage(producto.imagen_url)
+      if (newImage) await Promise.all((producto.imagenes?.length ? producto.imagenes : [producto.imagen_url]).filter(Boolean).map(removePublicationImage))
       setProducto(data); setDraft(data); setNewImage(null); setEditing(false)
     } catch (saveError) { setError(saveError.message) } finally { setSaving(false) }
   }
 
+  // Cambia el estado de la publicación únicamente si pertenece al usuario actual.
   async function changeStatus(estado) {
     setError('')
     const { data, error: updateError } = await supabase.from('publicaciones').update({ estado }).eq('id', producto.id).eq('usuario_id', user.id).select().single()
@@ -55,17 +64,22 @@ export default function Producto() {
     setProducto(data); setDraft(data)
   }
 
+  // Elimina la publicación propia y limpia sus imágenes de Storage.
   async function deletePublication() {
     if (!confirm('¿Estás seguro de que deseas eliminar esta publicación?')) return
     const { error: deleteError } = await supabase.from('publicaciones').delete().eq('id', producto.id).eq('usuario_id', user.id)
     if (deleteError) return setError(deleteError.message)
-    try { await removePublicationImage(producto.imagen_url) } catch (storageError) { setError(storageError.message) }
+    try {
+      const imageUrls = producto.imagenes?.length ? producto.imagenes : [producto.imagen_url]
+      await Promise.all(imageUrls.filter(Boolean).map(removePublicationImage))
+    } catch (storageError) { setError(storageError.message) }
     navigate('/perfil')
   }
 
   if (loading) return <p className="loading">Cargando...</p>
   if (!producto) return <div className="producto-detail-page"><p className="error">No se pudo cargar la publicación: {error}</p></div>
   const owner = user?.id === producto.usuario_id
+  // Actualiza un campo del formulario de edición sin perder los demás valores.
   const setField = (field, value) => setDraft({ ...draft, [field]: value })
 
   return <div className="producto-detail-page">

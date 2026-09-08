@@ -4,7 +4,6 @@ import { supabase } from '../lib/supabaseClient'
 import { removePublicationImage } from '../lib/publicationService'
 import { useAuth } from '../lib/AuthContext'
 import '../styles/Perfil.css'
-import { removePublicationImage } from '../lib/publicationStorage'
 
 export default function Perfil() {
   const { user, profile } = useAuth()
@@ -30,29 +29,12 @@ export default function Perfil() {
   }, [user, profile, fetchPublicaciones])
   /* eslint-enable react-hooks/set-state-in-effect */
 
-<<<<<<< HEAD
-  async function handleDelete(id, imagenUrl) {
-    if (!confirm('¿Estás seguro de que deseas eliminar esta publicación?')) return
-    try {
-      const { error } = await supabase
-        .from('publicaciones')
-        .delete()
-        .eq('id', id)
-      if (error) throw error
-      await removePublicationImage(imagenUrl)
-      setPublicaciones((current) => current.filter((p) => p.id !== id))
-      alert('Publicación eliminada')
-    } catch (err) {
-      alert('Error al eliminar: ' + err.message)
-    }
-=======
   async function saveProfile(event) {
     event.preventDefault(); setSaving(true); setError(''); setMessage('')
     const { error: updateError } = await supabase.from('profiles').upsert({ id: user.id, nombre: form.nombre.trim(), apellido: form.apellido.trim(), email: user.email, avatar_url: form.avatar_url.trim() || null }, { onConflict: 'id' })
     setSaving(false)
     if (updateError) return setError(updateError.message)
     setMessage('Perfil actualizado correctamente.')
->>>>>>> c4dee0c (Completa integracion con Supabase)
   }
 
   async function changeStatus(publication, estado) {
@@ -86,9 +68,5 @@ export default function Perfil() {
       <h2>Mis Publicaciones</h2>
       {publicaciones.length === 0 ? <p className="empty">No tienes publicaciones aún</p> : <div className="publicaciones-list">{publicaciones.map(pub => <div key={pub.id} className="publicacion-item"><div className="item-image">{pub.imagen_url && <img src={pub.imagen_url} alt={pub.titulo} />}</div><div className="item-info"><h3>{pub.titulo}</h3><p>Precio: ${pub.precio}</p><p>Talla: {pub.talla}</p><p>Tipo: {pub.tipo === 'donacion' ? 'Donación' : 'Venta'}</p><p>Estado: {pub.estado}</p><div className="item-actions"><Link className="edit-btn" to={`/producto/${pub.id}`}>Editar</Link><button className="edit-btn" onClick={() => changeStatus(pub, pub.estado === 'activo' ? 'pausado' : 'activo')}>{pub.estado === 'activo' ? 'Pausar' : 'Activar'}</button><button className="delete-btn" onClick={() => handleDelete(pub)}>Eliminar</button></div></div></div>)}</div>}
     </div>
-<<<<<<< HEAD
-  )
-=======
   </div>
->>>>>>> c4dee0c (Completa integracion con Supabase)
 }

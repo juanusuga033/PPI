@@ -14,12 +14,14 @@ import Producto from './pages/Producto'
 import Contacto from './pages/Contacto'
 import PasswordReset from './pages/PasswordReset'
 
+// Protege las rutas privadas y espera a que Supabase resuelva la sesión.
 function Protected({ children }) {
   const { user, loading } = useAuth()
   if (loading) return <div className="page-state">Cargando tu cuenta…</div>
   return user ? children : <Navigate to="/login" replace />
 }
 
+// Define el enrutamiento principal y registra los proveedores globales de la aplicación.
 function App() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}><AuthProvider>
@@ -31,6 +33,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/compra" element={<Compra />} />
           <Route path="/venta" element={<Protected><Venta /></Protected>} />
+          <Route path="/donar" element={<Protected><Venta donationOnly /></Protected>} />
           <Route path="/donaciones" element={<Donaciones />} />
           <Route path="/perfil" element={<Protected><Perfil /></Protected>} />
           <Route path="/mis-publicaciones" element={<Protected><Perfil /></Protected>} />

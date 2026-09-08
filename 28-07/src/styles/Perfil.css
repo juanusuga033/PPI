@@ -1,26 +1,37 @@
 .perfil-page {
   min-height: calc(100vh - 76px);
-  padding: 3rem clamp(1rem, 5vw, 4rem);
-  background: #232323;
+  padding: 3.5rem clamp(1rem, 5vw, 4rem);
+  background: #f7f3ef;
 }
 
 .perfil-header,
 .perfil-content {
-  width: min(920px, 100%);
+  width: min(1080px, 100%);
   margin: 0 auto;
 }
 
 .perfil-header {
-  padding: 2rem;
-  border-radius: 1.25rem;
-  background: #232323;
-  border: 1px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  border-radius: 1.5rem;
+  background: linear-gradient(135deg, #332d2b, #58453f);
   color: #fff;
+  box-shadow: 0 20px 45px rgba(64, 44, 36, 0.16);
 }
+
+.perfil-identity { display: flex; align-items: center; gap: 1.25rem; }
+.perfil-identity h1 { margin: .35rem 0; color: #fff; }
+.profile-note { margin: 0; opacity: .8; }
+.profile-stats { display: flex; gap: 1.5rem; text-align: center; }
+.profile-stats div { display: grid; gap: .2rem; min-width: 82px; }
+.profile-stats strong { font-size: 1.6rem; }
+.profile-stats span { font-size: .75rem; opacity: .75; }
 
 .perfil-header h1 {
   margin: 0;
-  color: #fff;
 }
 
 .email {
@@ -28,12 +39,32 @@
 }
 
 .perfil-content {
-  margin-top: 2rem;
+  display: grid;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
 }
 
 .perfil-content h2 {
-  color: #fff;
+  margin: .2rem 0 0;
+  color: #332d2b;
 }
+
+.profile-panel { padding: clamp(1.25rem, 3vw, 2rem); border: 1px solid #e5d9d0; border-radius: 1.25rem; background: #fff; }
+.section-heading { display: flex; justify-content: space-between; align-items: start; gap: 1rem; margin-bottom: 1.5rem; }
+.section-heading h2 { font-size: 1.45rem; }
+.profile-status { padding: .45rem .7rem; border-radius: 999px; background: #e7f3eb; color: #2b7245; font-size: .78rem; font-weight: 700; }
+.perfil-form { display: grid; grid-template-columns: 190px 1fr; gap: 2rem; align-items: start; }
+.avatar-editor { display: grid; justify-items: center; gap: .55rem; text-align: center; }
+.avatar-editor small { color: #81746d; font-size: .72rem; }
+.profile-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.profile-fields label:last-of-type { grid-column: 1 / -1; }
+.profile-actions { grid-column: 1 / -1; display: flex; justify-content: end; }
+.profile-avatar { display: grid; place-items: center; width: 92px; height: 92px; overflow: hidden; border-radius: 50%; background: #eec7bb; color: #70483f; font-size: 2rem; font-weight: 800; }
+.profile-avatar-large { width: 112px; height: 112px; flex: 0 0 auto; border: 4px solid rgba(255,255,255,.35); }
+.profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.file-button { display: inline-flex; padding: .6rem .9rem; border-radius: .65rem; background: #ef766c; color: #fff; cursor: pointer; font-weight: 700; }
+.file-button input { display: none; }
+.danger-link { border: 0; background: transparent; color: #aa3b32; cursor: pointer; font: inherit; font-size: .8rem; }
 
 .publicaciones-list {
   display: grid;
@@ -46,8 +77,8 @@
   gap: 1.25rem;
   padding: 1rem;
   border-radius: 1rem;
-  background: #232323;
-  border: 1px solid #fff;
+  background: #fff;
+  border: 1px solid #e5d9d0;
   box-shadow: 0 10px 25px rgba(64, 44, 36, 0.08);
 }
 
@@ -58,6 +89,8 @@
   background: #eadfd7;
 }
 
+.item-image span { display: grid; place-items: center; height: 100%; color: #81746d; font-size: .8rem; }
+
 .item-image img {
   width: 100%;
   height: 150px;
@@ -66,8 +99,9 @@
 
 .item-info h3 {
   margin-top: 0;
-  color: #fff;
+  color: #332d2b;
 }
+.publication-kicker { display: flex; gap: .5rem; color: #81746d; font-size: .75rem; text-transform: uppercase; letter-spacing: .04em; }
 
 .item-actions {
   display: flex;
@@ -99,6 +133,10 @@
 }
 
 @media (max-width: 600px) {
+  .perfil-header, .perfil-identity { align-items: flex-start; flex-direction: column; }
+  .profile-stats { width: 100%; justify-content: space-between; }
+  .perfil-form, .profile-fields { grid-template-columns: 1fr; }
+  .profile-fields label:last-of-type, .profile-actions { grid-column: auto; }
   .publicacion-item {
     grid-template-columns: 1fr;
   }

@@ -20,6 +20,7 @@ function Protected({ children }) {
   return user ? children : <Navigate to="/login" replace />
 }
 
+// Define el enrutamiento principal y registra los proveedores globales de la aplicación.
 function App() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}><AuthProvider>

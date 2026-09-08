@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabaseClient'
 import ProductCard from '../components/ProductCard'
 import '../styles/Home.css'
 
+// Carga y presenta el inicio con publicaciones destacadas y accesos rápidos.
 export default function Home() {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)

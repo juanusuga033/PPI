@@ -1,5 +1,6 @@
 import '../styles/Contacto.css'
 
+// Presenta los canales de contacto y la información de ayuda.
 export default function Contacto() {
   return (
     <div className="contacto-page">

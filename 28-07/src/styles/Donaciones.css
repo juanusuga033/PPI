@@ -5,3 +5,19 @@
 .donaciones-page .donacion-info {
   color: #ef766c;
 }
+
+.donation-intro {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 1.5rem 0 1rem;
+  color: #554b46;
+}
+
+.donation-intro span { color: #81746d; font-size: .9rem; }
+
+.donaciones-page .empty-state { display: grid; gap: .4rem; text-align: center; }
+
+@media (max-width: 600px) {
+  .donation-intro { align-items: flex-start; flex-direction: column; }
+}

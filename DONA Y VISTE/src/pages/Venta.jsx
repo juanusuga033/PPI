@@ -3,7 +3,6 @@ import { supabase } from '../lib/supabaseClient'
 import { uploadPublicationImage, removePublicationImage } from '../lib/publicationService'
 import { useAuth } from '../lib/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { uploadPublicationImage } from '../lib/publicationStorage'
 import '../styles/Venta.css'
 
 export default function Venta() {
@@ -59,14 +58,7 @@ export default function Venta() {
         throw new Error('Por favor completa todos los campos')
       }
 
-<<<<<<< HEAD
-      let imagenUrl = null
-      if (imagen) {
-        imagenUrl = (await uploadPublicationImage(user.id, imagen)).url
-      }
-=======
       const uploaded = await uploadPublicationImage(imagen, user.id)
->>>>>>> c4dee0c (Completa integracion con Supabase)
 
       const { error: insertError } = await supabase
         .from('publicaciones')

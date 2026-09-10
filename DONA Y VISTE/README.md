@@ -200,13 +200,10 @@ capturas de pantalla de la aplicación terminada.
 
 ## 👥 Autores
 
-Los nombres de los integrantes no se pueden confirmar a partir del código y la
-documentación disponible en este repositorio. Reemplazar los siguientes
-elementos por los nombres reales del equipo:
-
-- Integrante 1
-- Integrante 2
-- Integrante 3
+- María Fernanda Henao
+- Juan Usuga
+- Laura Ramirez
+- Miguel Duque
 
 ## 📚 Documentación relacionada
 

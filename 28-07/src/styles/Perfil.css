@@ -38,6 +38,26 @@
   opacity: 0.78;
 }
 
+.nombre {
+  font-weight: 700;
+  margin: 0.5rem 0 1rem;
+}
+
+.profile-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-width: 320px;
+  margin-top: 1rem;
+}
+
+.profile-edit-form input {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.6rem;
+  border: 1px solid #ccc;
+  font: inherit;
+}
+
 .perfil-content {
   display: grid;
   gap: 1.5rem;
@@ -107,6 +127,18 @@
   display: flex;
   gap: 0.75rem;
   margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.item-info input,
+.item-info select {
+  display: block;
+  width: 100%;
+  margin-bottom: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.6rem;
+  border: 1px solid #ccc;
+  font: inherit;
 }
 
 .edit-btn,

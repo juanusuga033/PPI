@@ -1,0 +1,56 @@
+.app-footer {
+  background: #1a1a1a;
+  color: #fff;
+  padding: 2.5rem clamp(1rem, 5vw, 4rem) 1.5rem;
+  margin-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+  max-width: 1126px;
+  margin: 0 auto;
+}
+
+.footer-brand {
+  max-width: 380px;
+}
+
+.footer-brand strong {
+  font-size: 1.2rem;
+}
+
+.footer-brand p {
+  opacity: 0.7;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  align-content: flex-start;
+}
+
+.footer-links a {
+  color: #fff;
+  text-decoration: none;
+  opacity: 0.85;
+  font-size: 0.9rem;
+}
+
+.footer-links a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.footer-copy {
+  text-align: center;
+  opacity: 0.6;
+  font-size: 0.8rem;
+  margin: 2rem 0 0;
+}

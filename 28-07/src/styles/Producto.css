@@ -51,6 +51,17 @@
   font-weight: 900;
 }
 
+.tipo-badge {
+  display: inline-block;
+  padding: 0.3rem 0.9rem;
+  border-radius: 999px;
+  background: #4a4a4a;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
 .talla,
 .descripcion,
 .contacto {
@@ -71,6 +82,21 @@
 
 .contactar-btn:hover {
   background: #d0d0d0;
+}
+
+.detail-owner-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.contactar-btn.delete {
+  background: #aa3b32;
+  color: #fff;
+}
+
+.contactar-btn.delete:hover {
+  background: #832a24;
 }
 
 @media (max-width: 720px) {

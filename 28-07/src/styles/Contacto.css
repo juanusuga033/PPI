@@ -47,6 +47,55 @@
   text-align: center;
 }
 
+.contacto-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.contacto-form input,
+.contacto-form textarea {
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid #fff;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  resize: vertical;
+}
+
+.contacto-form button {
+  align-self: flex-start;
+  padding: 0.7rem 1.4rem;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #232323;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.contacto-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.contacto-error {
+  margin: 0;
+  color: #ef766c;
+  font-size: 0.9rem;
+}
+
+.contacto-success {
+  margin-top: 1.5rem;
+  padding: 0.9rem 1rem;
+  border-radius: 0.75rem;
+  background: rgba(76, 175, 80, 0.15);
+  color: #8be09a;
+  font-weight: 700;
+}
+
 .contacto-logo {
   display: grid;
   place-items: center;

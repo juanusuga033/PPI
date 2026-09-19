@@ -47,7 +47,7 @@ npm run lint
 
 ## Esquema de Supabase
 
-El SQL necesario para crear las tablas, el bucket de Storage y las políticas RLS está en [`supabase/rls-policies.sql`](supabase/rls-policies.sql). Ejecútalo en el SQL Editor del proyecto Supabase antes de usar la app. Crea:
+El SQL necesario para crear las tablas, el bucket de Storage y las políticas RLS está en [`supabase/schema.sql`](supabase/schema.sql). Ejecútalo en el SQL Editor del proyecto Supabase antes de usar la app. Crea:
 
 - `publicaciones`: uniformes publicados para donar o vender (dueño = `usuario_id`, ligado a `auth.users`).
 - Bucket `uniformes`: fotos de las publicaciones (lectura pública, escritura solo autenticada).

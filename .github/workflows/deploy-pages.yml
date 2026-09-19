@@ -26,14 +26,14 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: DONA Y VISTE/package-lock.json
+          cache-dependency-path: 28-07/package-lock.json
       - run: npm ci
-        working-directory: DONA Y VISTE
+        working-directory: 28-07
       - run: npm run build
-        working-directory: DONA Y VISTE
+        working-directory: 28-07
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: DONA Y VISTE/dist
+          path: 28-07/dist
       - id: deployment
         uses: actions/deploy-pages@v4

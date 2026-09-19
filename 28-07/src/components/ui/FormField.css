@@ -1,0 +1,88 @@
+/* ============================================================
+   FormField — Campo de formulario con label fijo encima
+   ============================================================ */
+.ff-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.32rem;
+}
+
+.ff-label {
+  font-size: var(--label-size, 0.8rem);
+  font-weight: var(--label-weight, 700);
+  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.ff-required {
+  color: var(--color-error, #ff6b6b);
+  font-weight: 800;
+  font-size: 0.9em;
+}
+
+.ff-input,
+.ff-textarea {
+  width: 100%;
+  padding: var(--input-padding, 0.78rem 1rem);
+  border: 1.5px solid var(--ff-border, var(--border-light, #e5d9d0));
+  border-radius: var(--radius-md, 0.75rem);
+  background: var(--ff-bg, var(--surface-light, #fff));
+  color: var(--ff-text, var(--text-dark, #19352e));
+  font: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  appearance: none;
+}
+
+.ff-textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.ff-input:focus,
+.ff-textarea:focus {
+  outline: none;
+  border-color: var(--color-brand-dark, #0d6955);
+  box-shadow: 0 0 0 3px var(--accent-border, rgba(79,180,119,0.3));
+}
+
+/* Estado error */
+.ff-wrapper.has-error .ff-input,
+.ff-wrapper.has-error .ff-textarea {
+  border-color: var(--color-error, #ff6b6b);
+}
+.ff-wrapper.has-error .ff-input:focus,
+.ff-wrapper.has-error .ff-textarea:focus {
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+}
+.ff-error-msg {
+  font-size: 0.75rem;
+  color: var(--color-error, #ff6b6b);
+  margin-top: 0.1rem;
+}
+
+/* Campo de solo lectura */
+.ff-input[readonly],
+.ff-input:disabled {
+  opacity: 0.72;
+  cursor: default;
+  background: var(--ff-readonly-bg, rgba(0,0,0,0.04));
+}
+
+/* Variante oscura (para formularios sobre fondo oscuro) */
+.ff-dark .ff-label {
+  color: var(--text-primary, #fff);
+}
+.ff-dark .ff-input,
+.ff-dark .ff-textarea {
+  --ff-border: rgba(255,255,255,0.2);
+  --ff-bg: rgba(255,255,255,0.07);
+  --ff-text: #fff;
+  --ff-readonly-bg: rgba(255,255,255,0.04);
+}
+.ff-dark .ff-input::placeholder,
+.ff-dark .ff-textarea::placeholder {
+  color: rgba(255,255,255,0.4);
+}
+

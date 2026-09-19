@@ -1,0 +1,70 @@
+/* ============================================================
+   DonayViste — Design Tokens
+   Fuente única de verdad para colores, radios, sombras y espaciados.
+   Importar en index.css como primera línea.
+   ============================================================ */
+
+:root {
+  /* --- Paleta base --- */
+  --color-brand-dark:    #0d6955;   /* teal oscuro — nav activo, marca */
+  --color-brand:         #168267;   /* teal medio — links, eyebrow */
+  --color-brand-light:   #4fb477;   /* verde claro — acento principal */
+
+  /* --- Fondo oscuro (Home, Venta, Compra, Donaciones) --- */
+  --bg:                  #1a1f2e;   /* azul marino muy oscuro — fondo de página */
+  --surface:             #242a3b;   /* superficie de tarjetas sobre oscuro */
+  --surface-elevated:    #2d3347;   /* hover / tarjeta elevada */
+  --border:              rgba(255, 255, 255, 0.1);   /* borde sutil sobre oscuro */
+  --border-focus:        rgba(79, 180, 119, 0.6);   /* borde focus */
+
+  /* --- Fondo claro (Perfil, auth) --- */
+  --bg-light:            #f7f3ef;   /* beige/crema — fondo Perfil y auth */
+  --surface-light:       #ffffff;   /* blanco — tarjetas sobre claro */
+  --border-light:        #e5d9d0;   /* borde sobre fondo claro */
+
+  /* --- Texto sobre oscuro --- */
+  --text-primary:        #ffffff;
+  --text-muted:          rgba(255, 255, 255, 0.72);  /* suficiente contraste WCAG AA */
+  --text-faint:          rgba(255, 255, 255, 0.48);
+
+  /* --- Texto sobre claro --- */
+  --text-dark:           #19352e;
+  --text-dark-muted:     #5e6d67;
+
+  /* --- Acento (alias semánticos usados por ProductCard.css y Compra.css) --- */
+  --accent:              #4fb477;   /* verde claro — precio, badge activo */
+  --accent-dark:         #0d6955;   /* teal oscuro — hover */
+  --accent-contrast:     #ffffff;   /* texto sobre acento */
+  --accent-border:       rgba(79, 180, 119, 0.4);
+
+  /* --- Estados --- */
+  --color-error:         #ff6b6b;   /* rojo — error (WCAG AA sobre oscuro) */
+  --color-error-bg:      rgba(255, 107, 107, 0.12);
+  --color-error-dark:    #b04539;   /* rojo — error sobre claro */
+  --color-error-bg-light: #fff0ef;
+  --color-success:       #4fb477;
+  --color-success-bg:    rgba(79, 180, 119, 0.12);
+  --color-success-dark:  #2b7245;
+  --color-success-bg-light: #edf7e5;
+
+  /* --- Radios de borde --- */
+  --radius-xs:   0.35rem;
+  --radius-sm:   0.5rem;
+  --radius-md:   0.75rem;   /* inputs, selects */
+  --radius-lg:   1.25rem;   /* tarjetas, paneles */
+  --radius-xl:   1.75rem;   /* hero art */
+  --radius-full: 999px;     /* botones pill, badges */
+
+  /* --- Sombras --- */
+  --shadow-sm:   0 2px 8px rgba(0, 0, 0, 0.18);
+  --shadow-md:   0 8px 24px rgba(0, 0, 0, 0.25);
+  --shadow-lg:   0 16px 40px rgba(0, 0, 0, 0.32);
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.22);
+
+  /* --- Espaciados de formulario --- */
+  --form-gap:        1rem;
+  --input-padding:   0.78rem 1rem;
+  --label-size:      0.8rem;
+  --label-weight:    700;
+}
+

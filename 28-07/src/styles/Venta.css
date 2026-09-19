@@ -1,107 +1,191 @@
 .venta-page {
   min-height: calc(100vh - 76px);
-  padding: 3rem clamp(1rem, 5vw, 4rem);
-  background: #232323;
+  background: var(--bg);
+  padding: 3rem clamp(1rem, 5vw, 3rem) 5rem;
 }
 
-.venta-container {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.8fr);
-  gap: clamp(2rem, 6vw, 5rem);
-  align-items: start;
-  max-width: 980px;
+.venta-inner {
+  max-width: 1000px;
   margin: 0 auto;
 }
 
+/* Encabezado */
+.venta-heading {
+  color: var(--text-primary);
+  margin-bottom: 2.5rem;
+}
+.venta-heading h1 {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  margin: 0.25rem 0 0.6rem;
+  color: #fff;
+}
+.venta-heading p {
+  color: var(--text-muted);
+  margin: 0 0 1rem;
+  max-width: 560px;
+}
+
+.toggle-type-btn {
+  display: inline-flex;
+  align-items: center;
+  background: none;
+  border: 1.5px solid rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.75);
+  border-radius: var(--radius-full);
+  padding: 0.5rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.toggle-type-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Layout de dos columnas */
+.venta-layout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* Formulario */
 .venta-form {
   display: grid;
-  gap: 1rem;
-  padding: clamp(1.25rem, 4vw, 2.25rem);
-  border-radius: 1.25rem;
-  background: transparent;
-  border: 1px solid #fff;
-  box-shadow: 0 16px 35px rgba(64, 44, 36, 0.1);
+  gap: 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: clamp(1.25rem, 4vw, 2rem);
+  /* Pasar variables a los componentes ui */
+  color: var(--text-primary);
 }
 
-.form-group input {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 0.9rem 1rem;
-  border: 1px solid #fff;
-  border-radius: 0.7rem;
-  color: #232323;
-  font: inherit;
-}
-
-.form-group input:focus {
-  outline: 3px solid rgba(239, 118, 108, 0.2);
-  border-color: #ef766c;
-}
-
-.form-group input[type='file'] {
-  padding: 0.65rem;
-}
-
-.donacion-btn,
-.publicar-btn {
-  border: 0;
-  border-radius: 999px;
-  padding: 0.85rem 1.25rem;
-  background: #292424;
-  color: #fff;
-  cursor: pointer;
-  font: inherit;
-  font-weight: 800;
-}
-
-.publicar-btn:hover {
-  background: #ef766c;
-}
-
-.publicar-btn:disabled {
-  cursor: wait;
-  opacity: 0.65;
-}
-
-.error-message {
-  padding: 0.8rem 1rem;
-  border-radius: 0.65rem;
-  background: #fff0ef;
-  color: #aa3b32;
-}
-
-.preview-box {
+/* Grids de 2 columnas dentro del form */
+.venta-row {
   display: grid;
-  place-items: center;
-  min-height: 360px;
-  overflow: hidden;
-  border-radius: 1.25rem;
-  background: #fff;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 }
 
-.preview-box img {
+/* Badge "Gratis" para donaciones */
+.gratis-badge {
+  display: flex;
+  flex-direction: column;
+  gap: 0.32rem;
+}
+.gratis-label {
+  font-size: var(--label-size, 0.8rem);
+  font-weight: var(--label-weight, 700);
+  color: var(--text-primary);
+}
+.gratis-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1rem;
+  background: rgba(79, 180, 119, 0.15);
+  border: 1.5px solid rgba(79, 180, 119, 0.4);
+  border-radius: var(--radius-md);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+/* Estados del formulario */
+.venta-error {
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-error-bg);
+  color: var(--color-error);
+  font-size: 0.85rem;
+  border: 1px solid rgba(255,107,107,0.3);
+}
+.venta-success {
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-success-bg);
+  color: var(--accent);
+  font-size: 0.85rem;
+  border: 1px solid rgba(79,180,119,0.3);
+}
+
+/* Botón de publicar */
+.venta-submit {
   width: 100%;
-  height: 360px;
-  object-fit: cover;
+  padding: 1rem;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--color-brand-dark);
+  color: #fff;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.18s, box-shadow 0.18s;
+  box-shadow: 0 8px 20px rgba(13,105,85,0.3);
+}
+.venta-submit:hover {
+  background: var(--color-brand);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(13,105,85,0.4);
+}
+.venta-submit:disabled {
+  opacity: 0.6;
+  cursor: wait;
+  transform: none;
+  box-shadow: none;
+}
+.venta-submit--donation {
+  background: #2a6b47;
+}
+.venta-submit--donation:hover {
+  background: #338057;
 }
 
-.preview-placeholder {
-  color: #a99185;
+/* Sidebar */
+.venta-sidebar {
+  display: grid;
+  gap: 1rem;
+  position: sticky;
+  top: 90px;
 }
-
-.plus-icon {
-  font-size: 5rem;
-  font-weight: 200;
+.venta-tip-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  color: var(--text-muted);
+}
+.venta-tip-card h3 {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  font-family: inherit;
+}
+.venta-tip-card ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+.venta-tip-card li {
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+.venta-tip-card p {
+  margin: 0;
+  font-size: 0.82rem;
 }
 
 @media (max-width: 720px) {
-  .venta-container {
+  .venta-layout {
     grid-template-columns: 1fr;
   }
-
-  .preview-box,
-  .preview-box img {
-    min-height: 240px;
-    height: 240px;
+  .venta-row {
+    grid-template-columns: 1fr;
+  }
+  .venta-sidebar {
+    position: static;
   }
 }

@@ -35,6 +35,7 @@ alter table public.publicaciones add column if not exists categoria text default
 alter table public.publicaciones add column if not exists condicion text default 'Buen estado';
 alter table public.publicaciones add column if not exists contacto text default '';
 alter table public.publicaciones add column if not exists imagen_url text;
+alter table public.publicaciones add column if not exists imagenes text[] default '{}';
 alter table public.publicaciones add column if not exists tipo text default 'venta';
 alter table public.publicaciones add column if not exists estado text default 'activo';
 alter table public.publicaciones add column if not exists usuario_id uuid;

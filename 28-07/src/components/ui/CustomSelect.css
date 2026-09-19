@@ -1,0 +1,76 @@
+/* ============================================================
+   CustomSelect — Dropdown estilizado con flecha personalizada
+   ============================================================ */
+.cs-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.32rem;
+}
+
+.cs-label {
+  font-size: var(--label-size, 0.8rem);
+  font-weight: var(--label-weight, 700);
+  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.cs-required {
+  color: var(--color-error, #ff6b6b);
+  font-weight: 800;
+  font-size: 0.9em;
+}
+
+.cs-container {
+  position: relative;
+}
+
+.cs-select {
+  width: 100%;
+  padding: var(--input-padding, 0.78rem 1rem);
+  padding-right: 2.5rem; /* espacio para la flecha */
+  border: 1.5px solid var(--cs-border, var(--border-light, #e5d9d0));
+  border-radius: var(--radius-md, 0.75rem);
+  background: var(--cs-bg, var(--surface-light, #fff));
+  color: var(--cs-text, var(--text-dark, #19352e));
+  font: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cs-select:focus {
+  outline: none;
+  border-color: var(--color-brand-dark, #0d6955);
+  box-shadow: 0 0 0 3px var(--accent-border, rgba(79,180,119,0.3));
+}
+
+/* Flecha SVG inyectada como pseudo-elemento */
+.cs-arrow {
+  position: absolute;
+  right: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--cs-arrow-color, var(--text-dark-muted, #5e6d67));
+  display: flex;
+  align-items: center;
+}
+
+/* Variante oscura */
+.cs-dark .cs-label {
+  color: var(--text-primary, #fff);
+}
+.cs-dark .cs-select {
+  --cs-border: rgba(255,255,255,0.2);
+  --cs-bg: rgba(255,255,255,0.07);
+  --cs-text: #fff;
+  --cs-arrow-color: rgba(255,255,255,0.65);
+}
+.cs-dark .cs-select option {
+  background: #242a3b;
+  color: #fff;
+}
+

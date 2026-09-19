@@ -1,4 +1,4 @@
-# DonayViste — I.E. La Candelaria
+# Dona y Viste — I.E. La Candelaria
 
 Plataforma web para donar, comprar y vender uniformes escolares de la I.E. La Candelaria. React + Vite + Supabase (Auth, Postgres y Storage).
 

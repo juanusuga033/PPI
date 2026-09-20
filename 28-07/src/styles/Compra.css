@@ -172,6 +172,35 @@
   aspect-ratio: 4 / 3;
 }
 
+.catalog-message {
+  max-width: 620px;
+  margin: 3rem auto;
+  padding: 2.5rem 2rem;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  background: var(--surface-light);
+  box-shadow: 0 12px 30px rgba(25, 53, 46, 0.08);
+  text-align: center;
+}
+
+.catalog-message strong,
+.catalog-message span {
+  display: block;
+}
+
+.catalog-message strong {
+  color: var(--text-dark);
+  font-family: 'Playfair Display', serif;
+  font-size: 1.65rem;
+}
+
+.catalog-message span {
+  margin: 0.75rem auto 1.4rem;
+  max-width: 460px;
+  color: var(--text-dark-muted);
+  line-height: 1.55;
+}
+
 @media (max-width: 850px) {
   .catalog-hero {
     align-items: start;

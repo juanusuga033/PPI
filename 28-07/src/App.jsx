@@ -13,6 +13,7 @@ import Perfil from './pages/Perfil'
 import Producto from './pages/Producto'
 import Contacto from './pages/Contacto'
 import PasswordReset from './pages/PasswordReset'
+import Admin from './pages/Admin'
 
 // Protege las rutas privadas y espera a que Supabase resuelva la sesión.
 function Protected({ children }) {
@@ -41,6 +42,7 @@ function App() {
           <Route path="/donacion/:id" element={<Producto />} />
           <Route path="/contacto" element={<Contacto />} />
           <Route path="/recuperar-password" element={<PasswordReset />} />
+          <Route path="/admin" element={<Protected><Admin /></Protected>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main><Footer />

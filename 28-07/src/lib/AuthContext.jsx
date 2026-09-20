@@ -10,6 +10,11 @@ export function AuthProvider({ children }) {
     async function loadProfile(currentUser) {
       if (!currentUser) { setProfile(null); return }
       const { data } = await supabase.from('profiles').select('*').eq('id', currentUser.id).maybeSingle()
+      if (data?.status === 'inactive') {
+        await supabase.auth.signOut()
+        if (alive) { setUser(null); setProfile(null) }
+        return
+      }
       if (alive) setProfile(data || null)
     }
     // Recupera la sesión guardada y evita dejar la aplicación bloqueada si Supabase no responde.

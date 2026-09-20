@@ -50,6 +50,7 @@ export default function Header() {
           <div className="user-section">
             {user ? (
               <>
+                {profile?.role === 'admin' && <Link to="/admin" onClick={close}>Administrar</Link>}
                 <Link to="/perfil" onClick={close} className="user-chip">
                   <b>{name.slice(0, 1).toUpperCase()}</b>
                   <span>{name}</span>

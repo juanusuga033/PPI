@@ -9,6 +9,7 @@ const defaultContact = {
   email: 'donayviste@gmail.com',
   website: 'www.Donayviste.com',
   address: 'Santo Domingo - Medellín',
+  image_url: '/catalog/uniforme-15-page-4.jpeg',
 }
 
 // Presenta los canales de contacto y la información de ayuda.
@@ -53,7 +54,7 @@ export default function Contacto() {
         
         <div className="contacto-logo">
           <div className="shield">
-            <img src="/catalog/uniforme-15-page-4.jpeg" alt="Escudo de la I.E. La Candelaria" />
+            <img src={contact.image_url || defaultContact.image_url} alt="Imagen de contacto de Dona y Viste" />
           </div>
         </div>
       </div>

@@ -31,6 +31,8 @@
 .admin-contact-form { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
 .admin-contact-form label { display: grid; gap: 0.35rem; color: var(--text-dark); font-size: 0.8rem; font-weight: 700; }
 .admin-contact-form input { width: 100%; min-width: 0; padding: 0.72rem 0.85rem; border: 1px solid var(--border-light); border-radius: var(--radius-sm); color: var(--text-dark); background: #fbfcfa; }
+.admin-contact-image { grid-column: span 2; }
+.admin-contact-image small { color: var(--text-dark-muted); font-weight: 500; overflow-wrap: anywhere; }
 .admin-contact-form button { justify-self: start; grid-column: 1 / -1; }
 .admin-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-top: 1.5rem; }
 .admin-summary > div { padding: 1rem; border: 1px solid var(--border-light); border-radius: var(--radius-md); background: var(--surface-light); }
@@ -64,6 +66,7 @@
   .admin-hero, .admin-row { align-items: stretch; flex-direction: column; }
   .admin-row-meta { justify-content: start; }
   .admin-contact-form, .admin-summary { grid-template-columns: repeat(2, 1fr); }
+  .admin-contact-image { grid-column: 1 / -1; }
 }
 
 @media (max-width: 480px) {

@@ -8,7 +8,11 @@ create table if not exists public.contact_settings (
   website text not null default 'www.Donayviste.com',
   address text not null default 'Santo Domingo - Medellín',
   updated_at timestamptz not null default now()
+  image_url text not null default '/catalog/uniforme-15-page-4.jpeg'
 );
+
+alter table public.contact_settings
+  add column if not exists image_url text not null default '/catalog/uniforme-15-page-4.jpeg';
 
 insert into public.contact_settings (id)
 values (1)

@@ -21,7 +21,12 @@ export async function uploadPublicationImage(file, userId) {
     contentType: file.type,
     upsert: false,
   })
-  if (error) throw error
+  if (error) {
+    if (error.message?.toLowerCase().includes('bucket not found')) {
+      throw new Error('El almacenamiento de imágenes no está configurado. Ejecuta la migración de Supabase 20260920100000_donayviste_storage.sql.')
+    }
+    throw error
+  }
   const { data } = supabase.storage.from(IMAGE_BUCKET).getPublicUrl(path)
   return { url: data.publicUrl, path }
 }
@@ -49,7 +54,12 @@ export async function uploadProfileImage(file, userId) {
   const { error } = await supabase.storage.from(IMAGE_BUCKET).upload(path, file, {
     cacheControl: '3600', contentType: file.type, upsert: false,
   })
-  if (error) throw error
+  if (error) {
+    if (error.message?.toLowerCase().includes('bucket not found')) {
+      throw new Error('El almacenamiento de imágenes no está configurado. Ejecuta la migración de Supabase 20260920100000_donayviste_storage.sql.')
+    }
+    throw error
+  }
   return { path, url: supabase.storage.from(IMAGE_BUCKET).getPublicUrl(path).data.publicUrl }
 }
 

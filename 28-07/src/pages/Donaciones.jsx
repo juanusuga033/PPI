@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import ProductCard from '../components/ProductCard'
 import { supabase } from '../lib/supabaseClient'
 import '../styles/Donaciones.css'
@@ -21,7 +22,7 @@ export default function Donaciones() {
     if (size) query = query.eq('talla', size)
     if (condition) query = query.eq('condicion', condition)
     const { data, error: queryError } = await query
-    if (queryError) setError('No fue posible cargar las donaciones. Intenta nuevamente.')
+    if (queryError) setError(queryError.code === '42501' || queryError.message?.toLowerCase().includes('permission denied') ? 'auth-required' : 'No fue posible cargar las donaciones. Intenta nuevamente.')
     else setItems(data || [])
     setLoading(false)
   }, [search, size, condition])
@@ -35,6 +36,6 @@ export default function Donaciones() {
     <header className="catalog-hero"><div><span className="eyebrow">Compartir transforma</span><h1>Donaciones</h1></div><p>Prendas listas para empezar una nueva etapa, sin costo para quien las necesite.</p></header>
     <div className="donation-intro"><strong>Encuentra una prenda para tu proxima etapa.</strong><span>{items.length} disponibles en la comunidad</span></div>
     <div className="filters"><input value={search} onChange={event => setSearch(event.target.value)} placeholder="Buscar una donacion..." aria-label="Buscar donaciones" /><select value={size} onChange={event => setSize(event.target.value)} aria-label="Filtrar por talla"><option value="">Todas las tallas</option>{['XS', 'S', 'M', 'L', 'XL', '6', '8', '10', '12', '14'].map(item => <option key={item}>{item}</option>)}</select><select value={condition} onChange={event => setCondition(event.target.value)} aria-label="Filtrar por estado"><option value="">Todas las condiciones</option><option>Como nuevo</option><option>Buen estado</option><option>Uso visible</option></select></div>
-    {loading ? <div className="page-state">Cargando donaciones...</div> : error ? <div className="form-error">{error}</div> : items.length ? <div className="product-grid">{items.map((item, index) => <ProductCard product={item} index={index} key={item.id} />)}</div> : <div className="empty-state"><strong>No hay donaciones disponibles por ahora.</strong><span>Prueba con otros filtros o publica una prenda desde tu perfil.</span></div>}
+    {loading ? <div className="page-state">Cargando donaciones...</div> : error === 'auth-required' ? <div className="catalog-message catalog-message--auth"><strong>Las prendas compartidas están esperando.</strong><span>Inicia sesión para ver las donaciones de la comunidad y encontrar algo que te acompañe en tu próxima etapa.</span><Link className="button primary" to="/login">Iniciar sesión</Link></div> : error ? <div className="form-error">{error}</div> : items.length ? <div className="product-grid">{items.map((item, index) => <ProductCard product={item} index={index} key={item.id} />)}</div> : <div className="empty-state"><strong>No hay donaciones disponibles por ahora.</strong><span>Prueba con otros filtros o publica una prenda desde tu perfil.</span></div>}
   </div>
 }

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { getCatalogImage } from '../lib/catalogImages'
+import '../styles/ProductCard.css'
 
 // Formatea el precio con separador de miles en pesos colombianos.
 function formatPrice(price) {

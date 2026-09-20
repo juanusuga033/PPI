@@ -22,6 +22,10 @@ export default function Login() {
       setLoading(false)
       return setError(authError.message)
     }
+    if (!data?.user) {
+      setLoading(false)
+      return setError('No fue posible iniciar sesión. Revisa la configuración de Supabase y tus credenciales.')
+    }
     if (!data.user.email_confirmed_at) {
       await supabase.auth.signOut()
       setLoading(false)

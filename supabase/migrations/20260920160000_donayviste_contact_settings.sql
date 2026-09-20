@@ -7,7 +7,7 @@ create table if not exists public.contact_settings (
   email text not null default 'donayviste@gmail.com',
   website text not null default 'www.Donayviste.com',
   address text not null default 'Santo Domingo - Medellín',
-  updated_at timestamptz not null default now()
+  updated_at timestamptz not null default now(),
   image_url text not null default '/catalog/uniforme-15-page-4.jpeg'
 );
 

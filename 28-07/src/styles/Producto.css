@@ -83,6 +83,19 @@
 .contactar-btn:hover {
   background: #d0d0d0;
 }
+.contact-card {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 1rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.08);
+}
+.contact-card strong { color: #fff; }
+.contact-card span { color: #e6f4dd; font-size: 1.05rem; font-weight: 700; overflow-wrap: anywhere; }
+.contact-card small { color: rgba(255, 255, 255, 0.7); line-height: 1.45; }
+.contact-card button { justify-self: start; border: 0; background: transparent; color: #fff; cursor: pointer; padding: 0.2rem 0; text-decoration: underline; }
 
 .detail-owner-actions {
   display: flex;

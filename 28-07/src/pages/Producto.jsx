@@ -15,6 +15,7 @@ export default function Producto() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const [showContact, setShowContact] = useState(false)
   const navigate = useNavigate()
   const { user, profile } = useAuth()
 
@@ -33,8 +34,8 @@ export default function Producto() {
   // Abre el medio de contacto que el propietario dejó disponible.
   function handleContact() {
     if (!producto?.contacto) return setError('Esta publicación no tiene información de contacto.')
-    const contact = producto.contacto.trim()
-    window.location.href = contact.includes('@') ? `mailto:${contact}` : `tel:${contact}`
+    setError('')
+    setShowContact(true)
   }
 
   // Guarda los cambios propios y reemplaza la imagen anterior de forma segura.
@@ -93,5 +94,6 @@ export default function Producto() {
     <button onClick={() => navigate(-1)} className="back-btn">← Volver</button>
     {error && <div className="form-error">{error}</div>}
     {editing ? <form onSubmit={savePublication} className="producto-detail"><div className="detail-image"><img src={producto.imagen_url || getCatalogImage(0)} alt={producto.titulo} /><input type="file" accept="image/jpeg,image/png,image/webp" onChange={event => setNewImage(event.target.files?.[0] || null)} /></div><div className="detail-info"><label>Título<input value={draft.titulo} onChange={event => setField('titulo', event.target.value)} required /></label><label>Precio<input type="number" min="0" value={draft.precio} onChange={event => setField('precio', event.target.value)} required /></label><label>Talla<input value={draft.talla} onChange={event => setField('talla', event.target.value)} required /></label><label>Categoría<input value={draft.categoria} onChange={event => setField('categoria', event.target.value)} required /></label><label>Condición<input value={draft.condicion} onChange={event => setField('condicion', event.target.value)} required /></label><label>Descripción<textarea value={draft.descripcion} onChange={event => setField('descripcion', event.target.value)} /></label><label>Contacto<input value={draft.contacto} onChange={event => setField('contacto', event.target.value)} /></label><button className="contactar-btn" disabled={saving}>{saving ? 'Guardando...' : 'Guardar cambios'}</button><button type="button" className="back-btn" onClick={() => { setDraft(producto); setNewImage(null); setEditing(false) }}>Cancelar</button></div></form> : <div className="producto-detail"><div className="detail-image"><img src={producto.imagen_url || getCatalogImage(0)} alt={producto.titulo} /></div><div className="detail-info"><h1>{producto.titulo}</h1><p className="precio">{producto.tipo === 'donacion' ? 'DONACIÓN · Gratis' : `$${Number(producto.precio || 0).toLocaleString('es-CO')}`}</p><p className="talla"><b>Talla:</b> {producto.talla || 'Por confirmar'} · <b>Estado:</b> {producto.condicion || 'Buen estado'}</p><p className="descripcion">{producto.descripcion || 'El vendedor aún no agregó una descripción.'}</p><p className="contacto"><b>Publicado por la comunidad</b><br />{producto.created_at ? new Date(producto.created_at).toLocaleDateString('es-CO') : 'Fecha no disponible'}</p>{canManage ? <div className="item-actions"><button className="contactar-btn" onClick={() => setEditing(true)}>Editar</button><button className="contactar-btn" onClick={() => changeStatus(producto.estado === 'activo' ? 'pausado' : 'activo')}>{producto.estado === 'activo' ? 'Pausar' : 'Activar'}</button><button className="delete-btn" onClick={deletePublication}>Eliminar</button></div> : <button className="contactar-btn" onClick={handleContact}>Contactar vendedor</button>}</div></div>}
+      {showContact && <div className="contact-card"><strong>Información de contacto</strong><span>{producto.contacto}</span><small>Puedes usar este dato para comunicarte con la persona que publicó la prenda.</small><button type="button" onClick={() => setShowContact(false)}>Cerrar</button></div>}
   </div>
 }

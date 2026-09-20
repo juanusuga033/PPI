@@ -1,32 +1,53 @@
+import { useEffect, useState } from 'react'
+import { supabase } from '../lib/supabaseClient'
 import '../styles/Contacto.css'
+
+const defaultContact = {
+  title: 'DONA Y VISTE',
+  subtitle: 'Contáctanos',
+  phone: '336-4824793',
+  email: 'donayviste@gmail.com',
+  website: 'www.Donayviste.com',
+  address: 'Santo Domingo - Medellín',
+}
 
 // Presenta los canales de contacto y la información de ayuda.
 export default function Contacto() {
+  const [contact, setContact] = useState(defaultContact)
+
+  useEffect(() => {
+    async function loadContact() {
+      const { data } = await supabase.from('contact_settings').select('*').eq('id', 1).maybeSingle()
+      if (data) setContact(data)
+    }
+    loadContact()
+  }, [])
+
   return (
     <div className="contacto-page">
       <div className="contacto-container">
         <div className="contacto-info">
-          <h1>DONA Y VISTE</h1>
-          <p className="subtitle">Contáctanos!</p>
+          <h1>{contact.title}</h1>
+          <p className="subtitle">{contact.subtitle}</p>
           
           <div className="info-item">
             <span className="icon">📱</span>
-            <span>336-4824793</span>
+            <span>{contact.phone}</span>
           </div>
           
           <div className="info-item">
             <span className="icon">📧</span>
-            <span>donayviste@gmail.com</span>
+            <span>{contact.email}</span>
           </div>
           
           <div className="info-item">
             <span className="icon">🌐</span>
-            <span>www.Donayviste.com</span>
+            <span>{contact.website}</span>
           </div>
           
           <div className="info-item">
             <span className="icon">📍</span>
-            <span>Santo domingo - Medellin</span>
+            <span>{contact.address}</span>
           </div>
         </div>
         

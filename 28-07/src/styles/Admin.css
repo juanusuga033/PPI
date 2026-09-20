@@ -26,6 +26,17 @@
 .admin-hero p { margin: 0.55rem 0 0; color: var(--text-dark-muted); }
 .admin-grid { display: grid; gap: 1.5rem; margin-top: 1.5rem; }
 .admin-panel { padding: clamp(1rem, 3vw, 1.75rem); background: var(--surface-light); border: 1px solid var(--border-light); border-radius: var(--radius-lg); }
+.admin-contact-panel { margin-top: 1.5rem; }
+.admin-panel-note { margin: -0.5rem 0 1.25rem; color: var(--text-dark-muted); line-height: 1.5; }
+.admin-contact-form { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.admin-contact-form label { display: grid; gap: 0.35rem; color: var(--text-dark); font-size: 0.8rem; font-weight: 700; }
+.admin-contact-form input { width: 100%; min-width: 0; padding: 0.72rem 0.85rem; border: 1px solid var(--border-light); border-radius: var(--radius-sm); color: var(--text-dark); background: #fbfcfa; }
+.admin-contact-form button { justify-self: start; grid-column: 1 / -1; }
+.admin-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-top: 1.5rem; }
+.admin-summary > div { padding: 1rem; border: 1px solid var(--border-light); border-radius: var(--radius-md); background: var(--surface-light); }
+.admin-summary span, .admin-summary strong { display: block; }
+.admin-summary span { color: var(--text-dark-muted); font-size: 0.78rem; }
+.admin-summary strong { margin-top: 0.3rem; color: var(--color-brand-dark); font-size: 1.5rem; }
 .admin-panel .section-heading { margin-bottom: 1rem; }
 .admin-panel h2 { margin: 0.2rem 0 0; color: var(--text-dark); font-size: 1.45rem; }
 .admin-count { display: grid; place-items: center; min-width: 2rem; height: 2rem; border-radius: 50%; background: #e7f3eb; color: #2b7245; font-weight: 800; }
@@ -52,4 +63,9 @@
 @media (max-width: 760px) {
   .admin-hero, .admin-row { align-items: stretch; flex-direction: column; }
   .admin-row-meta { justify-content: start; }
+  .admin-contact-form, .admin-summary { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .admin-contact-form, .admin-summary { grid-template-columns: 1fr; }
 }

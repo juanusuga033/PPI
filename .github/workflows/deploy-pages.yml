@@ -1,4 +1,4 @@
-name: Deploy DonayViste to GitHub Pages
+name: Deploy Dona y Viste to GitHub Pages
 
 on:
   push:

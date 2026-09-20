@@ -2,29 +2,52 @@
 .donaciones-page {
   min-height: calc(100vh - 76px);
   padding: 2.5rem clamp(1rem, 4vw, 3.5rem);
-  background: #232323;
+  background: var(--bg);
+  color: var(--text-primary);
 }
 
+.marketplace-header {
+  max-width: 700px;
+  margin: 0 auto 2rem;
+  text-align: center;
+  color: var(--text-primary);
+}
+
+.marketplace-header h1 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  color: #fff;
+}
+
+.marketplace-header p {
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* Buscador */
 .search-box {
   position: relative;
   max-width: 680px;
-  margin: 0 auto 2.25rem;
+  margin: 0 auto 1.5rem;
 }
 
 .search-box input {
   width: 100%;
   box-sizing: border-box;
-  padding: 1rem 3.25rem 1rem 1.25rem;
-  border: 1px solid #fff;
-  border-radius: 999px;
-  background: #fff;
-  color: #232323;
+  padding: 0.9rem 3.25rem 0.9rem 1.25rem;
+  border: 1.5px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  color: var(--text-primary);
   font: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
+.search-box input::placeholder { color: var(--text-faint); }
 .search-box input:focus {
-  outline: 3px solid rgba(239, 118, 108, 0.25);
-  border-color: #ef766c;
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-border);
 }
 
 .search-icon {
@@ -32,67 +55,56 @@
   top: 50%;
   right: 1.2rem;
   transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
 }
 
+/* Barra de filtros */
+.filtros-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  max-width: 900px;
+  margin: 0 auto 2rem;
+}
+
+.filtros-bar select,
+.filtros-bar input {
+  padding: 0.55rem 0.9rem;
+  border-radius: var(--radius-full);
+  border: 1.5px solid rgba(255,255,255,0.15);
+  background: var(--surface);
+  color: var(--text-primary);
+  font: inherit;
+  appearance: none;
+  transition: border-color 0.15s;
+}
+.filtros-bar select:focus,
+.filtros-bar input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.filtros-bar select option { background: var(--surface); color: #fff; }
+
+/* Grid de productos */
 .productos-grid,
 .donaciones-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
   gap: 1.25rem;
   max-width: 1180px;
   margin: 0 auto;
 }
 
-.producto-card,
-.donacion-card {
-  overflow: hidden;
-  border-radius: 1rem;
-  background: #232323;
-  border: 1px solid #fff;
-  color: #fff;
-  text-decoration: none;
-  box-shadow: 0 10px 25px rgba(64, 44, 36, 0.08);
-  transition: transform 160ms ease, box-shadow 160ms ease;
-}
-
-.producto-card:hover,
-.donacion-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 30px rgba(64, 44, 36, 0.15);
-}
-
-.producto-imagen,
-.donacion-imagen {
-  display: grid;
-  place-items: center;
-  min-height: 220px;
-  background: #eadfd7;
-}
-
-.producto-imagen img,
-.donacion-imagen img {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-}
-
-.producto-precio,
-.donacion-info {
-  padding: 0.9rem 1rem;
-  font-weight: 800;
-}
-
-.producto-precio,
-.donacion-info {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
 .loading,
 .empty,
 .error {
+  grid-column: 1 / -1;
   padding: 3rem 1rem;
-  color: #706762;
+  /* Contraste suficiente sobre --bg oscuro */
+  color: var(--text-muted);
   text-align: center;
 }

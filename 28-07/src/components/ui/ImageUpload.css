@@ -1,0 +1,113 @@
+/* ============================================================
+   ImageUpload — Área de carga con drag-and-drop y preview
+   ============================================================ */
+.iu-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.iu-label-text {
+  font-size: var(--label-size, 0.8rem);
+  font-weight: var(--label-weight, 700);
+  color: inherit;
+}
+
+/* Zona de drop */
+.iu-dropzone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 160px;
+  padding: 1.5rem 1rem;
+  border: 2px dashed var(--iu-border, rgba(255,255,255,0.3));
+  border-radius: var(--radius-lg, 1.25rem);
+  background: var(--iu-bg, rgba(255,255,255,0.04));
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.iu-dropzone:hover,
+.iu-dropzone.drag-over {
+  border-color: var(--accent, #4fb477);
+  background: var(--iu-hover-bg, rgba(79,180,119,0.08));
+}
+
+/* Input file oculto — el click se dispara desde el botón */
+.iu-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.iu-icon {
+  color: var(--iu-icon-color, rgba(255,255,255,0.55));
+}
+
+.iu-main-text {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--iu-text, rgba(255,255,255,0.8));
+}
+
+.iu-sub-text {
+  font-size: 0.72rem;
+  color: var(--iu-text-muted, rgba(255,255,255,0.45));
+}
+
+/* Preview de imágenes seleccionadas */
+.iu-previews {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 0.5rem;
+}
+
+.iu-thumb {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: var(--radius-md, 0.75rem);
+  overflow: hidden;
+  background: rgba(255,255,255,0.06);
+}
+
+.iu-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.iu-thumb-remove {
+  position: absolute;
+  top: 0.2rem;
+  right: 0.2rem;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.65);
+  color: #fff;
+  font-size: 0.7rem;
+  border: 0;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  line-height: 1;
+}
+
+/* Variante clara (para perfil) */
+.iu-light .iu-dropzone {
+  --iu-border: var(--border-light, #e5d9d0);
+  --iu-bg: #fafafa;
+  --iu-hover-bg: rgba(13,105,85,0.05);
+  --iu-icon-color: var(--text-dark-muted, #5e6d67);
+  --iu-text: var(--text-dark, #19352e);
+  --iu-text-muted: var(--text-dark-muted, #5e6d67);
+}
+

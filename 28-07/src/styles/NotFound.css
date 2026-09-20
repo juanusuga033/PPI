@@ -1,0 +1,29 @@
+.not-found-page {
+  min-height: calc(100vh - 76px);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 2rem;
+  background: #232323;
+  color: #fff;
+}
+
+.not-found-page h1 {
+  font-size: clamp(4rem, 12vw, 8rem);
+  margin: 0;
+  line-height: 1;
+}
+
+.not-found-page p {
+  opacity: 0.78;
+  margin: 0.5rem 0 2rem;
+}
+
+.not-found-btn {
+  padding: 0.8rem 1.5rem;
+  border-radius: 999px;
+  background: #fff;
+  color: #232323;
+  font-weight: 800;
+  text-decoration: none;
+}

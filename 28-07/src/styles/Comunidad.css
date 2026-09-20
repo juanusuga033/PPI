@@ -1,0 +1,108 @@
+.comunidad-page {
+  min-height: calc(100vh - 76px);
+  padding: 2.5rem clamp(1rem, 5vw, 4rem);
+  background: #232323;
+  color: #fff;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.comunidad-page h1 {
+  margin: 0;
+}
+
+.subtitle {
+  opacity: 0.78;
+  margin-bottom: 1.5rem;
+}
+
+.post-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.post-form textarea {
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid #fff;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  resize: vertical;
+}
+
+.post-form button,
+.comentario-form button {
+  align-self: flex-end;
+  padding: 0.6rem 1.2rem;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #232323;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.posts-list {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.post-card {
+  border: 1px solid #fff;
+  border-radius: 1rem;
+  padding: 1.25rem;
+}
+
+.post-content {
+  white-space: pre-wrap;
+  margin-bottom: 0.75rem;
+}
+
+.post-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  opacity: 0.7;
+  margin-bottom: 0.75rem;
+}
+
+.delete-post-btn {
+  border: 0;
+  background: transparent;
+  color: #ef766c;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.comentarios-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.comentario-item {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.6rem;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.9rem;
+}
+
+.comentario-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.comentario-form input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid #fff;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+}

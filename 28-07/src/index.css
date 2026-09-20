@@ -187,7 +187,8 @@ h1, h2 { font-family: 'Playfair Display', serif; }
   font-weight: 700;
   white-space: nowrap;
 }
-.site-footer .brand span { color: #9ed16e; }
+.site-footer .brand .brand-first { color: #f2f7f1 !important; }
+.site-footer .brand .brand-second { color: #9ed16e !important; }
 .brand i { font-style: normal; color: #d3e74b; margin-left: 3px; }
 .site-footer p { max-width: 340px; color: #c0d1c7; font-size: 0.85rem; margin-top: 0.7rem; }
 .footer-links { display: flex; gap: 1.2rem; align-items: start; font-size: 0.88rem; }
